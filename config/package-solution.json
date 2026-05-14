@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "bpcl-i-connect-home-client-side-solution",
+    "id": "862ff543-b807-482a-ab63-28774c2c9373",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.21.1"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "bpcl-i-connect-home description"
+      },
+      "longDescription": {
+        "default": "bpcl-i-connect-home description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "bpcl-i-connect-home Feature",
+        "description": "The feature that activates elements of the bpcl-i-connect-home solution.",
+        "id": "c0f64d02-521c-4a52-87e0-caad57e17402",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/bpcl-i-connect-home.sppkg"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "bpcl-i-connect-home-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/bpclIConnectHome/BpclIConnectHomeWebPart.js",
+          "manifest": "./src/webparts/bpclIConnectHome/BpclIConnectHomeWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "BpclIConnectHomeWebPartStrings": "lib/webparts/bpclIConnectHome/loc/{locale}.js"
+  }
+}

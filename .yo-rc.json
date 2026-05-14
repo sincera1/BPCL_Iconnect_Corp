@@ -1,0 +1,18 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.22.0",
+    "sdksVersions": {},
+    "version": "1.21.1",
+    "libraryName": "bpcl-i-connect-home",
+    "libraryId": "862ff543-b807-482a-ab63-28774c2c9373",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "bpcl-i-connect-home",
+    "solutionShortDescription": "bpcl-i-connect-home description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

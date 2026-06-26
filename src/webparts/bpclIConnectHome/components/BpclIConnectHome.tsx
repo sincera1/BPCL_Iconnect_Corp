@@ -20,7 +20,7 @@ import BpclIconnectHomeServices, { IBGBannerItem, IQuickLinkItem, ICorporateNews
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
+import Card from 'react-bootstrap/Card';  
 import Carousel from 'react-bootstrap/Carousel';
 
 import PreviewBroadcastModal from "../Services/PreviewBroadcastModel";
@@ -343,7 +343,7 @@ export default class IConnectHome extends React.Component<
       }, 0);
     };
 
-    const categories = ["Mission", "Vision", "Values", "Culture"];
+    const categories = ["Vision", "Mission", "Values", "Culture"];
 
     const groupedVMV = categories.map((cat, index) => ({
 
@@ -1053,7 +1053,7 @@ export default class IConnectHome extends React.Component<
               {/* Header */}
               <div className={styles.missionHeader}>
                 <h4 className={styles.sectionHeading}>
-                  Mission, Vision & Values
+                  Vision, Mission, Values & Culture
                 </h4>
 
                 <div className={styles.topRightControls}>
@@ -1118,15 +1118,15 @@ export default class IConnectHome extends React.Component<
                                   setTimeout(() => {
                                     requestAnimationFrame(() => {
 
-                                      const isOverflowing =
-                                        el.scrollHeight > el.clientHeight;
+                                      // const isOverflowing =
+                                      //   el.scrollHeight > el.clientHeight;
 
-                                      console.log(
-                                        item.Title,
-                                        "scrollHeight:", el.scrollHeight,
-                                        "clientHeight:", el.clientHeight,
-                                        "overflow:", isOverflowing
-                                      );
+                                      // console.log(
+                                      //   item.Title,
+                                      //   "scrollHeight:", el.scrollHeight,
+                                      //   "clientHeight:", el.clientHeight,
+                                      //   "overflow:", isOverflowing
+                                      // );
 
                                       this.setState((prev) => ({
                                         overflowMap: {

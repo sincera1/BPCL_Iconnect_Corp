@@ -304,7 +304,7 @@ export default class BpclIconnectHomeServices {
     }
 
 
-    
+
 
     private getThumbnailFromAttachments(
         attachmentFiles: IAttachment[],
@@ -353,7 +353,7 @@ export default class BpclIconnectHomeServices {
             .expand("AttachmentFiles", "LikedBy", "DLGroup")
             .filter("Created ge datetime'2024-08-01T00:00:00Z' and CommunicationType eq 'Event' and Status eq 'Published'")
             .orderBy("PublishedDate", false)
-            .top(100)(); // fetch more for filtering
+            .top(15)();
 
         const currentUserId = await this.getCurrentUserId();
 
@@ -459,7 +459,9 @@ export default class BpclIconnectHomeServices {
                 "RedirectURL",
                 "FileRef"
             )
+            .orderBy("Id", false)
             .top(15)();
+        console.log("Business Units Count:", items.length);
 
 
         return items.map(item => ({
@@ -470,7 +472,7 @@ export default class BpclIconnectHomeServices {
         }));
     }
 
-    
+
     public async getVisionMissionValues(): Promise<IVMVItem[]> {
 
         const items = await this.sp.web.lists
@@ -485,7 +487,7 @@ export default class BpclIconnectHomeServices {
             )
             .filter("IsActive eq 1")
             .orderBy("Sequence", true)
-            .top(100)(); 
+            .top(100)();
 
         return items
             .map(item => ({
@@ -494,7 +496,7 @@ export default class BpclIconnectHomeServices {
                 Category: item.Category,
                 Sequence: item.Sequence
             }));
-            
+
     }
 
     public async getVMVIcons(): Promise<Map<string, string>> {
@@ -512,7 +514,7 @@ export default class BpclIconnectHomeServices {
         items.forEach(item => {
             if (item.VMVCategory && item.FileRef) {
 
-                const key = item.VMVCategory; 
+                const key = item.VMVCategory;
 
                 const absoluteUrl = `${window.location.origin}${item.FileRef}`;
 
@@ -534,7 +536,9 @@ export default class BpclIconnectHomeServices {
                 "CoverImage",
                 "AttachmentFiles"
             )
-            .expand("AttachmentFiles")();
+            .expand("AttachmentFiles")
+            .orderBy("Id", false)
+            .top(15)();
 
         return items.map(item => {
             let imageUrl = "";
@@ -603,7 +607,10 @@ export default class BpclIconnectHomeServices {
                 "CoverImage",
                 "AttachmentFiles"
             )
-            .expand("AttachmentFiles")();
+            .expand("AttachmentFiles")
+            .orderBy("Id", false)
+            .top(15)();
+
 
         return items.map(item => {
             let imageUrl = "";
@@ -772,10 +779,10 @@ export default class BpclIconnectHomeServices {
                 PublishedDate: item.PublishedDate,
                 BroadcastType: {
                     Label: item.BroadcastType?.Label || "",
-                    TermGuid: item.BroadcastType?.TermGuid || ""
+                    TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
                 },
-                IconUrl: item.BroadcastType?.TermGuid
-                    ? iconMap.get(item.BroadcastType.TermGuid) || ""
+                IconUrl: (item as any).BroadcastType?.[0].TermGuid
+                    ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
                     : ""
             }));
     }

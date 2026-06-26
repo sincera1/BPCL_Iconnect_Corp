@@ -772,9 +772,19 @@ Container .row {
   position: relative;
 }
 
+@media screen and (min-width: 900px) and (max-width: 980px)  {
+  .QLContainer {
+    position: relative;
+    margin-top: 20px;
+  }
+
+  .bannerWrapper {
+    max-width: 100% !important;
+}
+
+}
+
 @media only screen and (min-width: 768px) and (max-width: 820px) and (orientation: portrait) {
-
-
 
   .QLContainer {
     position: relative;
@@ -1178,11 +1188,11 @@ Container .row {
   cursor: not-allowed;
 }
 
-@media (min-width: 1366px) {
-  .topRightControls {
-    display: none !important;
-  }
-}
+// @media (min-width: 1366px) {
+//   .topRightControls {
+//     display: none !important;
+//   }
+// }
 
 .eventContentSection .sectionHeading,
 .missionContentSection .sectionHeading,
@@ -1648,58 +1658,71 @@ Container .row {
 }
 
 /* Track */
-.marqueeTrack {
-  display: flex;
-  width: auto;
-  animation: scrollMarquee 25s linear infinite;
-}
+// .marqueeTrack {
+//   display: flex;
+//   width: auto;
+//   animation: scrollMarquee 25s linear infinite;
+// }
+
+
 
 /* ---------- RESPONSIVE CARD WIDTH ---------- */
 
-/* Large screens → 4 cards */
+.marqueeWrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+/* Track */
+.marqueeTrack {
+  display: flex;
+  width: max-content;
+  animation: scrollMarquee linear infinite;
+  animation-duration: 80s; /* Default */
+}
+/* Desktop - 4 cards */
 .marqueeItem {
-  flex: 0 0 25%;
+  flex: 0 0 auto;
+  width: 300px;
   padding: 0 8px;
   box-sizing: border-box;
 }
-
-/* Medium screens → 3 cards */
+/* Laptop */
+@media (max-width: 1200px) {
+  .marqueeItem {
+    width: 260px;
+  }
+  .marqueeTrack {
+    animation-duration: 80s;
+  }
+}
+/* Tablet */
 @media (max-width: 992px) {
   .marqueeItem {
-    flex: 0 0 33.33%;
+    width: 220px;
+  }
+  .marqueeTrack {
+    animation-duration: 60s;
   }
 }
-
-/* Tablet → 2 cards */
-@media (max-width: 768px) {
-  .marqueeItem {
-    flex: 0 0 50%;
-  }
-}
-
-/* Mobile → 1 card */
+/* Mobile */
 @media (max-width: 576px) {
   .marqueeItem {
-    flex: 0 0 100%;
+    width: 180px;
   }
-
-  /* slower animation for mobile (better UX) */
   .marqueeTrack {
-    animation-duration: 40s;
+    animation-duration: 60s;
   }
 }
-
-/* Smooth continuous scroll */
+/* Infinite scrolling */
 @keyframes scrollMarquee {
-  0% {
+  from {
     transform: translateX(0);
   }
-
-  100% {
-    transform: translateX(-50%);
+  to {
+    transform: translate(-50%);
   }
 }
-
 
 // Business unit ---------------
 

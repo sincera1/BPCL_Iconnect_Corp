@@ -246,7 +246,7 @@ export default class BpclIconnectHomeServices {
     public async getCorporateNews(): Promise<ICorporateNewsItem[]> {
 
         const filterQuery =
-            `Created ge datetime'2024-08-01T00:00:00Z' and CommunicationType eq 'News' and Status eq 'Published' and PublishIn eq 'Corporate'`;
+            `Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'News' and Status eq 'Published' and PublishIn eq 'Corporate'`;
 
 
         const items = await this.publishingHubSp.web.lists
@@ -266,12 +266,12 @@ export default class BpclIconnectHomeServices {
             .expand("AttachmentFiles", "LikedBy")
             .filter(filterQuery)
             .orderBy("PublishedDate", false)
-            .top(15)();
+            .top(500)();
 
         const currentUserId = await this.getCurrentUserId();
 
         const results = await Promise.all(
-            items.map(async (item) => {
+            items.slice(0, 15).map(async (item) => {
 
                 const imageRelativeUrl = this.getThumbnailFromAttachments(
                     item.AttachmentFiles,
@@ -351,9 +351,9 @@ export default class BpclIconnectHomeServices {
                 "DLGroup/Title"
             )
             .expand("AttachmentFiles", "LikedBy", "DLGroup")
-            .filter("Created ge datetime'2024-08-01T00:00:00Z' and CommunicationType eq 'Event' and Status eq 'Published'")
+            .filter("Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'Event' and Status eq 'Published'")
             .orderBy("PublishedDate", false)
-            .top(15)();
+            .top(500)();
 
         const currentUserId = await this.getCurrentUserId();
 
@@ -429,11 +429,11 @@ export default class BpclIconnectHomeServices {
                 "AttachmentFiles"
             )
             .expand("AttachmentFiles")
-            .filter("Created ge datetime'2024-08-01T00:00:00Z' and CommunicationType eq 'Brand' and Status eq 'Published'")
+            .filter("Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'Brand' and Status eq 'Published'")
             .orderBy("PublishedDate", false)
-            .top(10)();
+            .top(500)();
 
-        return items.map(item => ({
+        return items.slice(0, 15).map(item => ({
             Id: item.Id,
             Title: item.Title,
             PublishedDate: item.PublishedDate,
@@ -720,10 +720,10 @@ export default class BpclIconnectHomeServices {
                 )
                 .expand("DLGroup")
                 .filter(
-                    "Created ge datetime'2024-08-01T00:00:00Z' and CommunicationType eq 'BroadCast' and Status eq 'Published'"
+                    "Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'BroadCast' and Status eq 'Published'"
                 )
                 .orderBy("PublishedDate", false)
-                .top(100)(),
+                .top(500)(),
 
             this.getBroadcastIcons()
         ]);

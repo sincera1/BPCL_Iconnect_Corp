@@ -78,17 +78,17 @@ const PreviewNewsModal: React.FC<Props> = ({
     <Modal
       show={show}
       onHide={onClose}
-      size="xl"
+      size="lg"
       centered
       style={{ zIndex: 9999 }}
     >
-      <Modal.Header closeButton>
+      <Modal.Header  className={styles.modalHeader} closeButton >
         <Modal.Title className={styles.pageTitle}>
           {item.Title}
         </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body className={`p-3 ${styles.modalBody}`}>
+      <Modal.Body className={`px-3 py-0 ${styles.modalBody}`}>
         {images.length > 0 && (
           <Carousel 
           className={styles.modalCarousel}
@@ -119,6 +119,7 @@ const PreviewNewsModal: React.FC<Props> = ({
                   alt={item.Title || "News image"}
                   style={{
                     height: "auto",
+                    maxHeight: "360px",
                     width: "100%",
                     objectFit: "scale-down",
                     display: "block",

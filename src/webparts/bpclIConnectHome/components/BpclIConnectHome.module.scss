@@ -1804,9 +1804,14 @@ Container .row {
 
 .modalBody {
   overflow-y: scroll;
-  max-height: calc(100vh - 180px);
+  max-height: calc(100vh - 140px);
+  
 }
 
+.modalHeader {
+  padding: 10px 20px;
+  border-bottom: none;
+}
 // // tool tipsss dsfdsgfdg
 
 // .ellipsisTooltip {

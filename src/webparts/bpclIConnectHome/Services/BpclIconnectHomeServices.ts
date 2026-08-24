@@ -148,7 +148,7 @@ export default class BpclIconnectHomeServices {
                 "https://bharatpetroleum.sharepoint.com/sites/dev-corporate-publishing-hub";
         } else if (currentUrl.includes("qa-")) {
             this.PUBLISHING_HUB_URL =
-                "https://bharatpetroleum.sharepoint.com/sites/qa-corporate-publishing-hub";
+                "https://bharatpetroleum.sharepoint.com/sites/test-cph";
         } else {
             this.PUBLISHING_HUB_URL =
                 "https://bharatpetroleum.sharepoint.com/sites/iconnect-corporate-publishing-hub";
@@ -777,12 +777,20 @@ export default class BpclIconnectHomeServices {
                 Id: item.Id,
                 Title: item.Title,
                 PublishedDate: item.PublishedDate,
+                // BroadcastType: {
+                //     Label: item.BroadcastType?.Label || "",
+                //     TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
+                // },
                 BroadcastType: {
                     Label: item.BroadcastType?.Label || "",
-                    TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
+                    TermGuid: item.BroadcastType?.TermGuid || ""
                 },
-                IconUrl: (item as any).BroadcastType?.[0].TermGuid
-                    ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
+                // IconUrl: (item as any).BroadcastType?.[0].TermGuid
+                //     ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
+                //     : ""
+
+                    IconUrl: item.BroadcastType?.TermGuid
+                    ? iconMap.get(item.BroadcastType.TermGuid) || ""
                     : ""
             }));
     }

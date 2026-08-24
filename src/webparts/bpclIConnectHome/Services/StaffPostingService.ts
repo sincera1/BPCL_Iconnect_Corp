@@ -24,7 +24,7 @@ export class StaffPostingService {
         "https://bharatpetroleum.sharepoint.com/sites/dev-corporate-publishing-hub";
     } else if (currentUrl.includes("qa-")) {
       this.PUBLISHING_HUB_URL =
-        "https://bharatpetroleum.sharepoint.com/sites/qa-corporate-publishing-hub";
+        "https://bharatpetroleum.sharepoint.com/sites/test-cph";
     } else {
       this.PUBLISHING_HUB_URL =
         "https://bharatpetroleum.sharepoint.com/sites/iconnect-corporate-publishing-hub";

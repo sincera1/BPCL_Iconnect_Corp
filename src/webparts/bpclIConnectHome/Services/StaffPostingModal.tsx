@@ -111,12 +111,12 @@ const orderedImages = useMemo(() => {
 
 }, [images, selectedIndex]);
   return (
-    <Modal show={show} onHide={onClose} size="xl" centered>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={onClose} size="lg" centered>
+      <Modal.Header  className={styles.modalHeader} closeButton >
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body className={`p-3 ${styles.modalBody}`}>
+      <Modal.Body className={`px-3 py-0 ${styles.modalBody}`}>
         {/* Dropdown */}
         <div className="mb-3">
           <Form.Label>Select SBU</Form.Label>

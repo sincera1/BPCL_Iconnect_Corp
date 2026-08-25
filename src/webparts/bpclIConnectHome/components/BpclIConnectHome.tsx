@@ -20,7 +20,7 @@ import BpclIconnectHomeServices, { IBGBannerItem, IQuickLinkItem, ICorporateNews
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';  
+import Card from 'react-bootstrap/Card';
 import Carousel from 'react-bootstrap/Carousel';
 
 import PreviewBroadcastModal from "../Services/PreviewBroadcastModel";
@@ -118,44 +118,124 @@ export default class IConnectHome extends React.Component<
   private homeService!: BpclIconnectHomeServices;
   private staffPostingService!: StaffPostingService;
 
+  // public async componentDidMount(): Promise<void> {
+  //   this.homeService = new BpclIconnectHomeServices(this.props.context);
+  //   this.staffPostingService = new StaffPostingService(
+
+  //     //this.homeService["publishingHubSp"],
+  //     this.homeService.publishingHubSp,
+
+  //     this.props.context
+
+  //   );
+
+  //   try {
+  //     const [bgBanners, quickLinks, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, brands, broadcasts, vmvIcons] = await Promise.all([
+  //       this.homeService.getBGBanner(),
+  //       this.homeService.getQuickLinks(),
+  //       this.homeService.getBusinessUnits(),
+  //       this.homeService.getVisionMissionValues(),
+  //       this.homeService.getGovernanceItems(),
+  //       this.homeService.getReportItems(),
+  //       this.homeService.getCorporateNews(),
+  //       this.homeService.getEvents(),
+  //       this.homeService.getBrands(),
+  //       this.homeService.getBroadcasts(),
+  //       this.homeService.getVMVIcons()
+
+  //     ]);
+
+  //     this.setState({ bgBanners, quickLinks, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, brands, broadcasts, vmvIcons, isLoading: false },
+  //       () => {
+  //         // ✅ Call after DOM updates
+  //         setTimeout(() => {
+  //           this.checkOverflow();
+  //         }, 0);
+  //       }
+  //     );
+
+  //   } catch (error) {
+  //     console.error("Something went wrong. Please contact administrator.");
+  //   }
+  // }
+
   public async componentDidMount(): Promise<void> {
+
     this.homeService = new BpclIconnectHomeServices(this.props.context);
+
     this.staffPostingService = new StaffPostingService(
-
-      //this.homeService["publishingHubSp"],
       this.homeService.publishingHubSp,
-
       this.props.context
-
     );
 
     try {
-      const [bgBanners, quickLinks, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, brands, broadcasts, vmvIcons] = await Promise.all([
+
+      // Load important content first
+      const [
+        bgBanners,
+        quickLinks,
+        brands,
+        corporateNews
+      ] = await Promise.all([
         this.homeService.getBGBanner(),
         this.homeService.getQuickLinks(),
-        this.homeService.getBusinessUnits(),
-        this.homeService.getVisionMissionValues(),
-        this.homeService.getGovernanceItems(),
-        this.homeService.getReportItems(),
-        this.homeService.getCorporateNews(),
-        this.homeService.getEvents(),
         this.homeService.getBrands(),
-        this.homeService.getBroadcasts(),
-        this.homeService.getVMVIcons()
-
+        this.homeService.getCorporateNews()
       ]);
 
-      this.setState({ bgBanners, quickLinks, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, brands, broadcasts, vmvIcons, isLoading: false },
-        () => {
-          // ✅ Call after DOM updates
-          setTimeout(() => {
-            this.checkOverflow();
-          }, 0);
-        }
-      );
+      this.setState({
+        bgBanners,
+        quickLinks,
+        brands,
+        corporateNews,
+        isLoading: false
+      });
+
+      // Load remaining content in background
+      Promise.all([
+        this.homeService.getGovernanceItems(),
+        this.homeService.getReportItems(),
+        this.homeService.getVisionMissionValues(),
+        this.homeService.getVMVIcons(),
+        this.homeService.getEvents(),
+        this.homeService.getBroadcasts(),
+        this.homeService.getBusinessUnits()
+
+      ]).then(([
+        governanceItems,
+        reportItems,
+        vmvItems,
+        vmvIcons,
+        events,
+        broadcasts,
+        businessUnits
+
+      ]) => {
+
+        this.setState({
+          governanceItems,
+          reportItems,
+          vmvItems,
+          vmvIcons,
+          events,
+          broadcasts,
+          businessUnits
+           
+        });
+
+      });
 
     } catch (error) {
-      console.error("Something went wrong. Please contact administrator.");
+
+      console.error(
+        "Something went wrong. Please contact administrator.",
+        error
+      );
+
+      this.setState({
+        isLoading: false
+      });
+
     }
   }
 

@@ -243,35 +243,43 @@ export default class BpclIconnectHomeServices {
         }
     }
 
+
+
     public async getCorporateNews(): Promise<ICorporateNewsItem[]> {
 
         const filterQuery =
-            `Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'News' and Status eq 'Published' and PublishIn eq 'Corporate'`;
+            `Created ge datetime'2025-01-01T00:00:00Z' and ` +
+            `CommunicationType eq 'News' and ` +
+            `Status eq 'Published' and ` +
+            `PublishIn eq 'Corporate'`;
 
+        const [items, currentUserId] = await Promise.all([
 
-        const items = await this.publishingHubSp.web.lists
-            .getByTitle("CorpCommunication")
-            .items
-            .select(
-                "Id",
-                "Title",
-                "PublishedDate",
-                "LikesCount",
-                "Thumbnail",
-                "NewsTypes",
-                "NewsTypes/Label",
-                "LikedBy/Id",
-                "AttachmentFiles"
-            )
-            .expand("AttachmentFiles", "LikedBy")
-            .filter(filterQuery)
-            .orderBy("PublishedDate", false)
-            .top(500)();
+            this.publishingHubSp.web.lists
+                .getByTitle("CorpCommunication")
+                .items
+                .select(
+                    "Id",
+                    "Title",
+                    "PublishedDate",
+                    "LikesCount",
+                    "Thumbnail",
+                    "NewsTypes",
+                    "NewsTypes/Label",
+                    "LikedBy/Id",
+                    "AttachmentFiles"
+                )
+                .expand("AttachmentFiles", "LikedBy")
+                .filter(filterQuery)
+                .orderBy("PublishedDate", false)
+                .top(15)(),
 
-        const currentUserId = await this.getCurrentUserId();
+            this.getCurrentUserId()
+
+        ]);
 
         const results = await Promise.all(
-            items.slice(0, 15).map(async (item) => {
+            items.map(async (item) => {
 
                 const imageRelativeUrl = this.getThumbnailFromAttachments(
                     item.AttachmentFiles,
@@ -292,7 +300,7 @@ export default class BpclIconnectHomeServices {
                     Id: item.Id,
                     Title: item.Title,
                     PublishedDate: item.PublishedDate,
-                    LikesCount: item.LikesCount ? item.LikesCount : 0,
+                    LikesCount: item.LikesCount || 0,
                     ImageUrl: imageRelativeUrl,
                     liked: isLiked,
                     newsType: resolvedLabel
@@ -416,7 +424,10 @@ export default class BpclIconnectHomeServices {
         });
     }
 
+
+
     public async getBrands(): Promise<ICorporateNewsItem[]> {
+
         const items = await this.publishingHubSp.web.lists
             .getByTitle("CorpCommunication")
             .items
@@ -429,11 +440,15 @@ export default class BpclIconnectHomeServices {
                 "AttachmentFiles"
             )
             .expand("AttachmentFiles")
-            .filter("Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'Brand' and Status eq 'Published'")
+            .filter(
+                "Created ge datetime'2025-01-01T00:00:00Z' and " +
+                "CommunicationType eq 'Brand' and " +
+                "Status eq 'Published'"
+            )
             .orderBy("PublishedDate", false)
-            .top(500)();
+            .top(15)();
 
-        return items.slice(0, 15).map(item => ({
+        return items.map(item => ({
             Id: item.Id,
             Title: item.Title,
             PublishedDate: item.PublishedDate,
@@ -789,11 +804,12 @@ export default class BpclIconnectHomeServices {
                 //     ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
                 //     : ""
 
-                    IconUrl: item.BroadcastType?.TermGuid
+                IconUrl: item.BroadcastType?.TermGuid
                     ? iconMap.get(item.BroadcastType.TermGuid) || ""
                     : ""
             }));
     }
+
 
     private async getBroadcastIcons(): Promise<Map<string, string>> {
 

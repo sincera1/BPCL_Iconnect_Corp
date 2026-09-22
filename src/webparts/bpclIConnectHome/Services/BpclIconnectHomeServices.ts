@@ -8,7 +8,12 @@ import "@pnp/sp/site-users/web";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 
 
-
+export interface INotificationItem {
+    Id: number;
+    Title: string;
+    IsActive: boolean;
+    DisplayOrder: number;
+}
 export interface IBGBannerItem {
     Id: number;
     ImageUrl: string;
@@ -57,6 +62,14 @@ export interface IBroadcastItem {
         TermGuid: string;
     };
     IconUrl: string;
+}
+
+export interface IEmployeeGreetingItem {
+    Id: number;
+    EmpName: { Id: number; Title: string; EMail: string; };
+    EmailID: string;
+    Category: string;
+    icon?: string;
 }
 
 export interface IBusinessUnitItem {
@@ -161,6 +174,26 @@ export default class BpclIconnectHomeServices {
     }
 
 
+    public async getNotifications(): Promise<INotificationItem[]> {
+        const items = await this.sp.web.lists
+            .getByTitle("Corp_SL_Notifications")
+            .items
+            .select(
+                "Id",
+                "Title",
+                "IsActive",
+                "DisplayOrder"
+            )
+            .filter("IsActive eq 1")
+            .orderBy("DisplayOrder", true)();
+
+        return items.map(item => ({
+            Id: item.Id,
+            Title: item.Title,
+            IsActive: item.IsActive,
+            DisplayOrder: item.DisplayOrder
+        }));
+    }
 
 
     public async getBGBanner(): Promise<IBGBannerItem[]> {
@@ -476,7 +509,7 @@ export default class BpclIconnectHomeServices {
             )
             .orderBy("Id", false)
             .top(15)();
-        console.log("Business Units Count:", items.length);
+
 
 
         return items.map(item => ({
@@ -831,6 +864,7 @@ export default class BpclIconnectHomeServices {
         return iconMap;
     }
 
+
     public async toggleLike(
         itemId: number,
         isLiked: boolean
@@ -868,6 +902,23 @@ export default class BpclIconnectHomeServices {
         return updatedLikes;
     }
 
+    public async getEmployeeGreetings(): Promise<IEmployeeGreetingItem[]> {
+
+
+        const items = await this.sp.web.lists.getByTitle("Corp_SL_EmployeeGreetings")
+
+            .items
+            .select("Id", "EmpName/Id", "EmpName/Title", "EmpName/EMail", "EmailID", "Category")
+            .expand("EmpName")
+            .orderBy("Id", false)();
+        return items.map((item: any) => ({
+            Id: item.Id,
+            EmpName: item.EmpName,
+            EmailID: item.EmailID,
+            Category: item.Category
+
+        }));
+    }
 
 
 

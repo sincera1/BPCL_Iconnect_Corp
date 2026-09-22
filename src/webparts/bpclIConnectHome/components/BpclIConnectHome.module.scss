@@ -1976,3 +1976,637 @@ Container .row {
 .modalCarousel :global(.carousel-control-next) {
   right: 15px !important;
 }
+
+
+/* =========================================
+TODAY'S BIRTHDAY SECTION
+========================================= */
+
+.birthdayCarouselSection {
+background: #D6D6D6;
+padding: 40px 56px;
+border-radius: 0;
+position: relative;
+}
+
+/* =========================================
+BIRTHDAY CARD
+========================================= */
+
+.birthdayCarouselSection .messageBorderCard {
+border-bottom: 10px solid #f6c441;
+border-radius: 16px !important;
+box-shadow: 0 11px 14px 0 #00347a14;
+border-top: none;
+border-left: none;
+border-right: none;
+overflow: hidden;
+}
+
+/* =========================================
+BIRTHDAY BANNER CARD
+========================================= */
+
+.birthdayCarouselSection .bannerCard {
+background: #ffffff;
+border-radius: 12px;
+min-height: 132px;
+padding: 6px 10px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 20px;
+}
+
+/* =========================================
+LEFT CONTENT
+========================================= */
+
+.birthdayCarouselSection .leftContent {
+display: flex;
+align-items: center;
+gap: 16px;
+flex: 1;
+}
+
+/* =========================================
+PROFILE IMAGE
+========================================= */
+
+.birthdayCarouselSection .profileImg {
+width: 100px;
+height: 120px;
+border-radius: 8px;
+object-fit: cover;
+flex-shrink: 0;
+}
+
+/* =========================================
+TEXT CONTENT
+========================================= */
+
+.birthdayCarouselSection .textContent {
+padding: 10px;
+}
+
+/* =========================================
+NAME
+========================================= */
+
+.birthdayCarouselSection .name {
+font-size: 18px;
+font-weight: 700;
+color: #037ec4;
+margin: 0 0 10px;
+}
+
+/* =========================================
+EMAIL
+========================================= */
+
+.birthdayCarouselSection .email {
+font-size: 11px;
+color: #6b7280;
+margin: 4px 0;
+word-break: break-word;
+}
+
+/* =========================================
+BIRTHDAY MESSAGE
+========================================= */
+
+.birthdayCarouselSection .desc {
+font-size: 13px;
+color: #374151;
+margin-bottom: 8px;
+line-height: 1.6;
+}
+
+/* =========================================
+WELCOME BUTTON
+========================================= */
+
+.birthdayCarouselSection .ctaBtn {
+border: 1px solid #037ec4;
+background: transparent;
+color: #037ec4;
+padding: 6px 16px;
+border-radius: 16px;
+font-size: 10px;
+font-weight: 600;
+cursor: pointer;
+transition: 0.3s ease;
+}
+
+.birthdayCarouselSection .ctaBtn:hover {
+background: #037ec4;
+color: #fff;
+}
+
+/* =========================================
+RIGHT CELEBRATION ICON
+========================================= */
+
+.birthdayCarouselSection .rightIcon {
+margin-top: -20px;
+flex-shrink: 0;
+}
+
+.birthdayCarouselSection .rightIcon img {
+max-width: 100px;
+height: auto;
+}
+
+/* =========================================
+BIRTHDAY CAROUSEL
+========================================= */
+
+.birthdayCarouselSection .messageCarousel {
+position: relative;
+}
+
+/* =========================================
+CAROUSEL INDICATORS
+========================================= */
+
+.birthdayCarouselSection :global(.carousel-indicators) {
+position: absolute;
+bottom: 10px;
+right: 14px;
+left: auto;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: flex-end;
+z-index: 10;
+}
+
+.birthdayCarouselSection :global(.carousel-indicators button) {
+width: 7px;
+height: 7px;
+border-radius: 50%;
+background-color: #d1d5db;
+opacity: 1;
+margin: 0 4px;
+border: none;
+}
+
+.birthdayCarouselSection :global(.carousel-indicators button.active),
+.birthdayCarouselSection :global(.carousel-indicators .active) {
+background-color: #1e40af !important;
+opacity: 1;
+}
+
+/* =========================================
+NO DATA
+========================================= */
+
+.birthdayCarouselSection .noDataWrapper {
+min-height: 132px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.birthdayCarouselSection .noDataText {
+margin: 0;
+font-size: 14px;
+color: #6b7280;
+}
+
+/* =========================================
+TABLET / MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+
+.birthdayCarouselSection {
+padding: 24px 16px;
+}
+
+.birthdayCarouselSection .bannerCard {
+flex-direction: column;
+align-items: center;
+justify-content: center;
+text-align: center;
+min-height: auto;
+padding: 20px 16px 40px;
+}
+
+.birthdayCarouselSection .leftContent {
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 100%;
+text-align: center;
+}
+
+.birthdayCarouselSection .profileImg {
+width: 90px;
+height: 110px;
+margin-bottom: 12px;
+}
+
+.birthdayCarouselSection .textContent {
+margin: 0;
+width: 100%;
+text-align: center;
+padding: 10px;
+}
+
+.birthdayCarouselSection .name {
+font-size: 16px;
+margin-top: 6px;
+}
+
+.birthdayCarouselSection .email {
+font-size: 11px;
+}
+
+.birthdayCarouselSection .desc {
+font-size: 12px;
+max-width: 100%;
+text-align: center;
+}
+
+.birthdayCarouselSection .ctaBtn {
+margin: 10px auto 0;
+display: block;
+}
+
+.birthdayCarouselSection .rightIcon {
+margin-top: 16px;
+align-self: center;
+}
+
+.birthdayCarouselSection .rightIcon img {
+max-width: 70px;
+}
+
+.birthdayCarouselSection :global(.carousel-indicators) {
+left: 50%;
+right: auto;
+transform: translateX(-50%);
+bottom: 8px;
+}
+}
+
+/* =========================================
+SMALL MOBILE
+========================================= */
+
+@media (max-width: 576px) {
+
+.birthdayCarouselSection {
+padding: 16px 10px;
+}
+
+.birthdayCarouselSection .bannerCard {
+padding: 16px 14px 38px;
+border-radius: 10px;
+}
+
+.birthdayCarouselSection .profileImg {
+width: 85px;
+height: 105px;
+}
+
+.birthdayCarouselSection .name {
+font-size: 15px;
+}
+
+.birthdayCarouselSection .desc {
+font-size: 12px;
+line-height: 1.5;
+}
+
+.birthdayCarouselSection .rightIcon img {
+max-width: 60px;
+}
+}
+
+
+/* ============================================================
+   BPCL NOTIFICATION / MOVING MARQUEE
+============================================================ */
+ 
+.noticeBar {
+  width: 100%;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  background: #0052cc;
+  color: #ffffff;
+  overflow: hidden;
+  position: relative;
+}
+ 
+/* ============================================================
+   FIXED TOPIC
+============================================================ */
+ 
+.noticeBarLabel {
+  height: 100%;
+  min-width: 145px;
+  padding: 0 18px;
+ 
+  display: flex;
+  align-items: center;
+  gap: 9px;
+ 
+  background: #003f9e;
+ 
+  font-size: 13px;
+  font-weight: 600;
+ 
+  flex-shrink: 0;
+  position: relative;
+  z-index: 5;
+ 
+  box-shadow: 5px 0 12px rgba(0, 0, 0, 0.08);
+}
+ 
+.noticeIcon {
+  width: 22px;
+  height: 22px;
+ 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+  color: #ffc400;
+  flex-shrink: 0;
+ 
+  i {
+    font-size: 14px;
+  }
+}
+ 
+.noticeLabelText {
+  white-space: nowrap;
+  color: #ffffff;
+  letter-spacing: 0.1px;
+}
+ 
+/* ============================================================
+   MOVING CONTENT AREA
+============================================================ */
+ 
+.noticeContent {
+  flex: 1;
+  height: 100%;
+ 
+  display: flex;
+  align-items: center;
+ 
+  overflow: hidden;
+  min-width: 0;
+ 
+  position: relative;
+}
+ 
+/* ============================================================
+   MOVING TRACK
+============================================================ */
+ 
+.noticeTrack {
+  display: flex;
+  align-items: center;
+ 
+  width: max-content;
+  min-width: max-content;
+ 
+  white-space: nowrap;
+ 
+  animation: noticeMarquee 32s linear infinite;
+ 
+  will-change: transform;
+ 
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+ 
+/* ============================================================
+   MESSAGE GROUP
+============================================================ */
+ 
+.noticeGroup {
+  display: flex;
+  align-items: center;
+ 
+  flex-shrink: 0;
+ 
+  white-space: nowrap;
+}
+ 
+/* ============================================================
+   INDIVIDUAL MESSAGE
+============================================================ */
+ 
+.noticeItem {
+  display: inline-flex;
+  align-items: center;
+ 
+  flex-shrink: 0;
+ 
+  white-space: nowrap;
+}
+ 
+/* ============================================================
+   MESSAGE TEXT
+============================================================ */
+ 
+.noticeMessage {
+  display: inline-flex;
+  align-items: center;
+ 
+  color: #ffffff;
+ 
+  font-size: 13px;
+  font-weight: 500;
+ 
+  line-height: 1;
+ 
+  white-space: nowrap;
+}
+ 
+/* ============================================================
+   MESSAGE SEPARATOR
+============================================================ */
+ 
+.noticeSeparator {
+  width: 5px;
+  height: 5px;
+ 
+  min-width: 5px;
+ 
+  margin: 0 30px;
+ 
+  border-radius: 50%;
+ 
+  background: #ffc400;
+ 
+  display: inline-block;
+ 
+  flex-shrink: 0;
+}
+ 
+/* ============================================================
+   OLD / UNUSED CLASSES
+   Kept only for compatibility if old JSX still exists
+============================================================ */
+ 
+.noticeText {
+  padding: 0;
+  margin: 0;
+ 
+  border: none;
+  background: transparent;
+ 
+  color: #ffffff;
+ 
+  font-size: 13px;
+  font-weight: 500;
+ 
+  white-space: nowrap;
+}
+ 
+.noticeMeta {
+  display: none;
+}
+ 
+.noticeArrow {
+  display: none !important;
+}
+ 
+.viewAllBtn {
+  display: none !important;
+}
+ 
+.notificationImportant,
+.notificationNew,
+.notificationNormal {
+  display: none !important;
+}
+ 
+.noticeDot {
+  display: none !important;
+}
+ 
+/* ============================================================
+   MARQUEE ANIMATION
+============================================================ */
+ 
+@keyframes noticeMarquee {
+ 
+  0% {
+    transform: translateX(0);
+  }
+ 
+  100% {
+    transform: translateX(-50%);
+  }
+ 
+}
+ 
+/* ============================================================
+   TABLET
+============================================================ */
+ 
+@media (max-width: 768px) {
+ 
+  .noticeBar {
+    height: 40px;
+  }
+ 
+  .noticeBarLabel {
+    min-width: 125px;
+    padding: 0 13px;
+    gap: 7px;
+  }
+ 
+  .noticeIcon {
+    width: 20px;
+    height: 20px;
+ 
+    i {
+      font-size: 13px;
+    }
+  }
+ 
+  .noticeLabelText {
+    font-size: 12px;
+  }
+ 
+  .noticeMessage {
+    font-size: 12px;
+  }
+ 
+  .noticeSeparator {
+    margin: 0 22px;
+  }
+ 
+  .noticeTrack {
+    animation-duration: 26s;
+  }
+ 
+}
+ 
+/* ============================================================
+   MOBILE
+============================================================ */
+ 
+@media (max-width: 576px) {
+ 
+  .noticeBar {
+    height: 38px;
+  }
+ 
+  .noticeBarLabel {
+    min-width: 108px;
+    padding: 0 10px;
+    gap: 6px;
+  }
+ 
+  .noticeIcon {
+    width: 18px;
+    height: 18px;
+ 
+    i {
+      font-size: 12px;
+    }
+  }
+ 
+  .noticeLabelText {
+    font-size: 11px;
+  }
+ 
+  .noticeMessage {
+    font-size: 11px;
+  }
+ 
+  .noticeSeparator {
+    width: 4px;
+    height: 4px;
+    min-width: 4px;
+    margin: 0 16px;
+  }
+ 
+  .noticeTrack {
+    animation-duration: 21s;
+  }
+ 
+}
+ 
+/* ============================================================
+   ACCESSIBILITY
+============================================================ */
+ 
+@media (prefers-reduced-motion: reduce) {
+ 
+  .noticeTrack {
+    animation: none;
+  }
+ 
+}

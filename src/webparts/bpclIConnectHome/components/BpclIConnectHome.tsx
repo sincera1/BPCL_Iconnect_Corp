@@ -15,7 +15,7 @@ import "swiper/swiper-bundle.css";
 // import 'swiper/css/pagination';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import BpclIconnectHomeServices, { IBGBannerItem, IQuickLinkItem, ICorporateNewsItem, IBusinessUnitItem, IVMVItem, IGovernanceItem, IReportItem, IBroadcastItem, IAttachment, INewsPreviewItem, IEventPreviewItem } from "../Services/BpclIconnectHomeServices";
+import BpclIconnectHomeServices, { INotificationItem, IBGBannerItem, IQuickLinkItem, ICorporateNewsItem, IBusinessUnitItem, IVMVItem, IGovernanceItem, IReportItem, IBroadcastItem, IEmployeeGreetingItem, IAttachment, INewsPreviewItem, IEventPreviewItem } from "../Services/BpclIconnectHomeServices";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -29,11 +29,14 @@ import PreviewNewsModal from "../Services/PreviewNewsModal";
 import Loader from "../Services/Loader";
 import { StaffPostingService } from "../Services/StaffPostingService";
 import StaffPostingModal from "../Services/StaffPostingModal";
+import BDcelebration from '../assets/images/celebration-BD.png';
 
 
 interface IIConnectHomeState {
+
   isLoading: boolean;
   isPaused: boolean;
+  notifications: INotificationItem[];
   bgBanners: IBGBannerItem[];
   quickLinks: IQuickLinkItem[];
   businessUnits: IBusinessUnitItem[];
@@ -45,6 +48,7 @@ interface IIConnectHomeState {
   events: ICorporateNewsItem[];
   brands: ICorporateNewsItem[];
   broadcasts: IBroadcastItem[];
+  employeeGreetings: IEmployeeGreetingItem[];
   showPreview: boolean;
   previewItem?: IBroadcastItem;
   previewAttachments: IAttachment[];
@@ -63,6 +67,7 @@ interface IIConnectHomeState {
 
 
 }
+
 
 
 
@@ -109,6 +114,8 @@ export default class IConnectHome extends React.Component<
     showNewsPreview: false,
     selectedNewsItem: undefined,
     newsAttachments: [],
+    notifications: [],
+    employeeGreetings: [],
     expandedCard: null,
     overflowMap: {}
 
@@ -118,126 +125,128 @@ export default class IConnectHome extends React.Component<
   private homeService!: BpclIconnectHomeServices;
   private staffPostingService!: StaffPostingService;
 
-  // public async componentDidMount(): Promise<void> {
-  //   this.homeService = new BpclIconnectHomeServices(this.props.context);
-  //   this.staffPostingService = new StaffPostingService(
-
-  //     //this.homeService["publishingHubSp"],
-  //     this.homeService.publishingHubSp,
-
-  //     this.props.context
-
-  //   );
-
-  //   try {
-  //     const [bgBanners, quickLinks, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, brands, broadcasts, vmvIcons] = await Promise.all([
-  //       this.homeService.getBGBanner(),
-  //       this.homeService.getQuickLinks(),
-  //       this.homeService.getBusinessUnits(),
-  //       this.homeService.getVisionMissionValues(),
-  //       this.homeService.getGovernanceItems(),
-  //       this.homeService.getReportItems(),
-  //       this.homeService.getCorporateNews(),
-  //       this.homeService.getEvents(),
-  //       this.homeService.getBrands(),
-  //       this.homeService.getBroadcasts(),
-  //       this.homeService.getVMVIcons()
-
-  //     ]);
-
-  //     this.setState({ bgBanners, quickLinks, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, brands, broadcasts, vmvIcons, isLoading: false },
-  //       () => {
-  //         // ✅ Call after DOM updates
-  //         setTimeout(() => {
-  //           this.checkOverflow();
-  //         }, 0);
-  //       }
-  //     );
-
-  //   } catch (error) {
-  //     console.error("Something went wrong. Please contact administrator.");
-  //   }
-  // }
-
   public async componentDidMount(): Promise<void> {
-
     this.homeService = new BpclIconnectHomeServices(this.props.context);
-
     this.staffPostingService = new StaffPostingService(
+
+      //this.homeService["publishingHubSp"],
       this.homeService.publishingHubSp,
+
       this.props.context
+
     );
 
     try {
-
-      // Load important content first
-      const [
-        bgBanners,
-        quickLinks,
-        brands,
-        corporateNews
-      ] = await Promise.all([
+      const [notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons, employeeGreetings] = await Promise.all([
+        this.homeService.getNotifications(),
         this.homeService.getBGBanner(),
         this.homeService.getQuickLinks(),
         this.homeService.getBrands(),
-        this.homeService.getCorporateNews()
-      ]);
-
-      this.setState({
-        bgBanners,
-        quickLinks,
-        brands,
-        corporateNews,
-        isLoading: false
-      });
-
-      // Load remaining content in background
-      Promise.all([
+        this.homeService.getBusinessUnits(),
+        this.homeService.getVisionMissionValues(),
         this.homeService.getGovernanceItems(),
         this.homeService.getReportItems(),
-        this.homeService.getVisionMissionValues(),
-        this.homeService.getVMVIcons(),
+        this.homeService.getCorporateNews(),
         this.homeService.getEvents(),
         this.homeService.getBroadcasts(),
-        this.homeService.getBusinessUnits()
+        this.homeService.getVMVIcons(),
+        this.homeService.getEmployeeGreetings()
 
-      ]).then(([
-        governanceItems,
-        reportItems,
-        vmvItems,
-        vmvIcons,
-        events,
-        broadcasts,
-        businessUnits
+      ]);
 
-      ]) => {
-
-        this.setState({
-          governanceItems,
-          reportItems,
-          vmvItems,
-          vmvIcons,
-          events,
-          broadcasts,
-          businessUnits
-           
-        });
-
-      });
-
-    } catch (error) {
-
-      console.error(
-        "Something went wrong. Please contact administrator.",
-        error
+      this.setState({ notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons, employeeGreetings, isLoading: false },
+        () => {
+          // ✅ Call after DOM updates
+          setTimeout(() => {
+            this.checkOverflow();
+          }, 0);
+        }
       );
 
-      this.setState({
-        isLoading: false
-      });
-
+    } catch (error) {
+      console.error("Something went wrong. Please contact administrator.");
     }
   }
+
+  // public async componentDidMount(): Promise<void> {
+
+  //   this.homeService = new BpclIconnectHomeServices(this.props.context);
+
+  //   this.staffPostingService = new StaffPostingService(
+  //     this.homeService.publishingHubSp,
+  //     this.props.context
+  //   );
+
+  //   try {
+
+  //     // Load important content first
+  //     const [
+  //       bgBanners,
+  //       quickLinks,
+  //       brands,
+  //       corporateNews
+  //     ] = await Promise.all([
+  //       this.homeService.getBGBanner(),
+  //       this.homeService.getQuickLinks(),
+  //       this.homeService.getBrands(),
+  //       this.homeService.getCorporateNews()
+  //     ]);
+
+  //     this.setState({
+  //       bgBanners,
+  //       quickLinks,
+  //       brands,
+  //       corporateNews,
+  //       isLoading: false
+  //     });
+
+  //     // Load remaining content in background
+  //     Promise.all([
+  //       this.homeService.getGovernanceItems(),
+  //       this.homeService.getReportItems(),
+  //       this.homeService.getVisionMissionValues(),
+  //       this.homeService.getVMVIcons(),
+  //       this.homeService.getEvents(),
+  //       this.homeService.getBroadcasts(),
+  //       this.homeService.getBusinessUnits()
+
+  //     ]).then(([
+  //       governanceItems,
+  //       reportItems,
+  //       vmvItems,
+  //       vmvIcons,
+  //       events,
+  //       broadcasts,
+  //       businessUnits
+
+  //     ]) => {
+
+  //       this.setState({
+  //         governanceItems,
+  //         reportItems,
+  //         vmvItems,
+  //         vmvIcons,
+  //         events,
+  //         broadcasts,
+  //         businessUnits
+
+  //       });
+
+  //     });
+
+  //   } catch (error) {
+
+  //     console.error(
+  //       "Something went wrong. Please contact administrator.",
+  //       error
+  //     );
+
+  //     this.setState({
+  //       isLoading: false
+  //     });
+
+  //   }
+  // }
 
 
 
@@ -443,6 +452,80 @@ export default class IConnectHome extends React.Component<
     return (
       <Container fluid className='p-0'>
         <Loader show={this.state.isLoading} />
+        <div className={styles.noticeBar}>
+
+          {/* Fixed Topic */}
+          <div className={styles.noticeBarLabel}>
+
+            <div className={styles.noticeIcon}>
+              <i className="bi bi-megaphone-fill" />
+            </div>
+
+            <span className={styles.noticeLabelText}>
+              Notifications
+            </span>
+
+          </div>
+
+          {/* Moving Messages */}
+          <div className={styles.noticeContent}>
+
+            <div className={styles.noticeTrack}>
+
+              {/* First copy */}
+              <div className={styles.noticeGroup}>
+
+                {this.state.notifications.map(
+                  (notification: INotificationItem) => (
+                    <div
+                      className={styles.noticeItem}
+                      key={`first-${notification.Id}`}
+                    >
+
+                      <span className={styles.noticeMessage}>
+                        {notification.Title}
+                      </span>
+
+                      <span className={styles.noticeSeparator} />
+
+                    </div>
+                  )
+                )}
+
+              </div>
+
+              {/* Duplicate copy for seamless looping */}
+              <div
+                className={styles.noticeGroup}
+                aria-hidden="true"
+              >
+
+                {this.state.notifications.map(
+                  (notification: INotificationItem) => (
+                    <div
+                      className={styles.noticeItem}
+                      key={`second-${notification.Id}`}
+                    >
+
+                      <span className={styles.noticeMessage}>
+                        {notification.Title}
+                      </span>
+
+                      <span className={styles.noticeSeparator} />
+
+                    </div>
+                  )
+                )}
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
         <div className={styles.dashboardWrapper}>
           <div
             className={styles.topImageSection}
@@ -849,6 +932,87 @@ export default class IConnectHome extends React.Component<
                   </Carousel>
                 )}
               </div>
+            </div>
+          </Col>
+        </Row>
+
+        {/* ---------------- today's birthday section ---------------- */}
+
+        <Row>
+          <Col md={12} className="px-2">
+            <div className={styles.birthdayCarouselSection}>
+              <Card className={styles.messageBorderCard}>
+                <Card.Body>
+
+                  {this.state.employeeGreetings &&
+                    this.state.employeeGreetings.length > 0 ? (
+                    <Carousel
+                      indicators
+                      controls={false}
+                      interval={5000}
+                      className={styles.messageCarousel}
+                    >
+                      {this.state.employeeGreetings.map((item) => {
+                        const email =
+                          item.EmailID ||
+                          item.EmpName?.EMail ||
+                          "";
+
+                        const profilePic =
+                          `${this.props.context.pageContext.web.absoluteUrl}/_layouts/15/userphoto.aspx?size=L&accountname=${email}`;
+
+                        return (
+                          <Carousel.Item key={item.Id}>
+                            <div className={styles.bannerCard}>
+                              <div className={styles.leftContent}>
+                                <img
+                                  src={profilePic}
+                                  alt={item.EmpName?.Title}
+                                  className={styles.profileImg}
+                                />
+
+                                <div className={styles.textContent}>
+                                  <h3 className={styles.name}>
+                                    {item.EmpName?.Title}
+                                  </h3>
+
+                                  <p className={styles.email}>
+                                    {email}
+                                  </p>
+
+                                  <p className={styles.desc}>
+                                    "Happy Birthday Wishing you a fantastic day filled
+                                    with joy and success. May this year bring you new
+                                    opportunities and achievements. Enjoy your special
+                                    day to the fullest"
+                                  </p>
+
+                                  <button className={styles.ctaBtn}>
+                                    WELCOME
+                                  </button>
+                                </div>
+                              </div>
+
+                              <div className={styles.rightIcon}>
+                                <img
+                                  src={BDcelebration}
+                                  alt="Celebration"
+                                  width={100}
+                                />
+                              </div>
+                            </div>
+                          </Carousel.Item>
+                        );
+                      })}
+                    </Carousel>
+                  ) : (
+                    <div className={styles.noDataWrapper}>
+                      <p className={styles.noDataText}>No data to display</p>
+                    </div>
+                  )}
+
+                </Card.Body>
+              </Card>
             </div>
           </Col>
         </Row>

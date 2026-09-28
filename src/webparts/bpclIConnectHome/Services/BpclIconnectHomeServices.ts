@@ -162,7 +162,7 @@ export default class BpclIconnectHomeServices {
         } else if (currentUrl.includes("qa-")) {
             this.PUBLISHING_HUB_URL =
                 "https://bharatpetroleum.sharepoint.com/sites/qa-corporate-publishing-hub";
-                // "https://bharatpetroleum.sharepoint.com/sites/test-cph";
+            // "https://bharatpetroleum.sharepoint.com/sites/test-cph";
         } else {
             this.PUBLISHING_HUB_URL =
                 "https://bharatpetroleum.sharepoint.com/sites/iconnect-corporate-publishing-hub";
@@ -197,26 +197,7 @@ export default class BpclIconnectHomeServices {
     }
 
 
-    public async getBGBanner(): Promise<IBGBannerItem[]> {
-        const items = await this.sp.web.lists
-            .getByTitle("Corp_DL_BgBanner")
-            .items
-            .select(
-                "Id",
-                "BannerHeading",
-                "FileRef"
-            )
-            .orderBy("Id", false)
-            .top(1)();
 
-
-        return items.map(item => ({
-            Id: item.Id,
-            BannerHeading: item.BannerHeading,
-            ImageUrl: item.FileRef
-
-        }));
-    }
 
     public async getQuickLinks(): Promise<IQuickLinkItem[]> {
         const items = await this.sp.web.lists
@@ -457,44 +438,6 @@ export default class BpclIconnectHomeServices {
             };
         });
     }
-
-
-
-    public async getBrands(): Promise<ICorporateNewsItem[]> {
-
-        const items = await this.publishingHubSp.web.lists
-            .getByTitle("CorpCommunication")
-            .items
-            .select(
-                "Id",
-                "Title",
-                "PublishedDate",
-                "LikesCount",
-                "RelatedSiteURL",
-                "AttachmentFiles"
-            )
-            .expand("AttachmentFiles")
-            .filter(
-                "Created ge datetime'2025-01-01T00:00:00Z' and " +
-                "CommunicationType eq 'Brand' and " +
-                "Status eq 'Published'"
-            )
-            .orderBy("PublishedDate", false)
-            .top(15)();
-
-        return items.map(item => ({
-            Id: item.Id,
-            Title: item.Title,
-            PublishedDate: item.PublishedDate,
-            LikesCount: item.LikesCount || 0,
-            RedirectURL: item.RelatedSiteURL,
-            ImageUrl:
-                item.AttachmentFiles && item.AttachmentFiles.length > 0
-                    ? item.AttachmentFiles[0].ServerRelativeUrl
-                    : ""
-        }));
-    }
-
 
 
 
@@ -750,8 +693,10 @@ export default class BpclIconnectHomeServices {
 
     public async getBroadcasts(): Promise<IBroadcastItem[]> {
 
-        const userGroups = await this.getUserGroups();
-        const currentUserId = await this.getCurrentUserId();
+        const [userGroups, currentUserId] = await Promise.all([
+            this.getUserGroups(),
+            this.getCurrentUserId()
+        ]);
 
         const [items, iconMap] = await Promise.all([
 
@@ -772,7 +717,7 @@ export default class BpclIconnectHomeServices {
                     "Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'BroadCast' and Status eq 'Published'"
                 )
                 .orderBy("PublishedDate", false)
-                .top(500)(),
+                .top(200)(),
 
             this.getBroadcastIcons()
         ]);

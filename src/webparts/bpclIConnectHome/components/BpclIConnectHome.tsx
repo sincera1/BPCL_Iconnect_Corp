@@ -15,7 +15,7 @@ import "swiper/swiper-bundle.css";
 // import 'swiper/css/pagination';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import BpclIconnectHomeServices, { INotificationItem, IBGBannerItem, IQuickLinkItem, ICorporateNewsItem, IBusinessUnitItem, IVMVItem, IGovernanceItem, IReportItem, IBroadcastItem, IAttachment, INewsPreviewItem, IEventPreviewItem } from "../Services/BpclIconnectHomeServices";
+import BpclIconnectHomeServices, { INotificationItem, IQuickLinkItem, ICorporateNewsItem, IBusinessUnitItem, IVMVItem, IGovernanceItem, IReportItem, IBroadcastItem, IAttachment, INewsPreviewItem, IEventPreviewItem } from "../Services/BpclIconnectHomeServices";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -37,7 +37,6 @@ interface IIConnectHomeState {
   isLoading: boolean;
   isPaused: boolean;
   notifications: INotificationItem[];
-  bgBanners: IBGBannerItem[];
   quickLinks: IQuickLinkItem[];
   businessUnits: IBusinessUnitItem[];
   vmvItems: IVMVItem[];
@@ -46,7 +45,6 @@ interface IIConnectHomeState {
   reportItems: IReportItem[];
   corporateNews: ICorporateNewsItem[];
   events: ICorporateNewsItem[];
-  brands: ICorporateNewsItem[];
   broadcasts: IBroadcastItem[];
   // employeeGreetings: IEmployeeGreetingItem[];
   showPreview: boolean;
@@ -70,17 +68,6 @@ interface IIConnectHomeState {
 
 
 
-
-/* -------------------- Helpers -------------------- */
-
-// const chunkArray = <T,>(array: T[], size: number): T[][] => {
-//   const chunks: T[][] = [];
-//   for (let i = 0; i < array.length; i += size) {
-//     chunks.push(array.slice(i, i + size));
-//   }
-//   return chunks;
-// };
-
 /* -------------------- Component -------------------- */
 
 export default class IConnectHome extends React.Component<
@@ -92,7 +79,6 @@ export default class IConnectHome extends React.Component<
   state: IIConnectHomeState = {
     isLoading: true,
     isPaused: false,
-    bgBanners: [],
     quickLinks: [],
     businessUnits: [],
     vmvItems: [],
@@ -101,7 +87,6 @@ export default class IConnectHome extends React.Component<
     reportItems: [],
     corporateNews: [],
     events: [],
-    brands: [],
     broadcasts: [],
     showPreview: false,
     previewItem: undefined,
@@ -125,128 +110,95 @@ export default class IConnectHome extends React.Component<
   private homeService!: BpclIconnectHomeServices;
   private staffPostingService!: StaffPostingService;
 
+
+
   public async componentDidMount(): Promise<void> {
     this.homeService = new BpclIconnectHomeServices(this.props.context);
+
     this.staffPostingService = new StaffPostingService(
-
-      //this.homeService["publishingHubSp"],
       this.homeService.publishingHubSp,
-
       this.props.context
-
     );
 
     try {
-      const [notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons] = await Promise.all([
-        this.homeService.getNotifications(),
-        this.homeService.getBGBanner(),
-        this.homeService.getQuickLinks(),
-        this.homeService.getBrands(),
-        this.homeService.getBusinessUnits(),
-        this.homeService.getVisionMissionValues(),
-        this.homeService.getGovernanceItems(),
-        this.homeService.getReportItems(),
-        this.homeService.getCorporateNews(),
-        this.homeService.getEvents(),
-        this.homeService.getBroadcasts(),
-        this.homeService.getVMVIcons(),
-        //this.homeService.getEmployeeGreetings()
+      
 
+      const [
+        notifications,
+        quickLinks,
+        corporateNews,
+        broadcasts
+      ] = await Promise.all([
+        this.homeService.getNotifications(),
+        this.homeService.getQuickLinks(),
+        this.homeService.getCorporateNews(),
+        this.homeService.getBroadcasts()
       ]);
 
-      this.setState({ notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons, isLoading: false },
+      
+
+      this.setState(
+        {
+          notifications,
+          quickLinks,
+          corporateNews,
+          broadcasts,
+          isLoading: false
+        },
         () => {
-          // ✅ Call after DOM updates
           setTimeout(() => {
             this.checkOverflow();
           }, 0);
         }
       );
 
+    
+
+      Promise.all([
+        this.homeService.getBusinessUnits(),
+        this.homeService.getVisionMissionValues(),
+        this.homeService.getVMVIcons(),
+        this.homeService.getGovernanceItems(),
+        this.homeService.getReportItems(),
+        this.homeService.getEvents()
+      ])
+        .then(
+          ([
+            businessUnits,
+            vmvItems,
+            vmvIcons,
+            governanceItems,
+            reportItems,
+            events
+          ]) => {
+            this.setState({
+              businessUnits,
+              vmvItems,
+              vmvIcons,
+              governanceItems,
+              reportItems,
+              events
+            });
+          }
+        )
+        .catch((error) => {
+          console.error(
+            "Error loading remaining home page data:",
+            error
+          );
+        });
+
     } catch (error) {
-      console.error("Something went wrong. Please contact administrator.");
+      console.error(
+        "Something went wrong while loading initial data.",
+        error
+      );
+
+      this.setState({
+        isLoading: false
+      });
     }
   }
-
-  // public async componentDidMount(): Promise<void> {
-
-  //   this.homeService = new BpclIconnectHomeServices(this.props.context);
-
-  //   this.staffPostingService = new StaffPostingService(
-  //     this.homeService.publishingHubSp,
-  //     this.props.context
-  //   );
-
-  //   try {
-
-  //     // Load important content first
-  //     const [
-  //       bgBanners,
-  //       quickLinks,
-  //       brands,
-  //       corporateNews
-  //     ] = await Promise.all([
-  //       this.homeService.getBGBanner(),
-  //       this.homeService.getQuickLinks(),
-  //       this.homeService.getBrands(),
-  //       this.homeService.getCorporateNews()
-  //     ]);
-
-  //     this.setState({
-  //       bgBanners,
-  //       quickLinks,
-  //       brands,
-  //       corporateNews,
-  //       isLoading: false
-  //     });
-
-  //     // Load remaining content in background
-  //     Promise.all([
-  //       this.homeService.getGovernanceItems(),
-  //       this.homeService.getReportItems(),
-  //       this.homeService.getVisionMissionValues(),
-  //       this.homeService.getVMVIcons(),
-  //       this.homeService.getEvents(),
-  //       this.homeService.getBroadcasts(),
-  //       this.homeService.getBusinessUnits()
-
-  //     ]).then(([
-  //       governanceItems,
-  //       reportItems,
-  //       vmvItems,
-  //       vmvIcons,
-  //       events,
-  //       broadcasts,
-  //       businessUnits
-
-  //     ]) => {
-
-  //       this.setState({
-  //         governanceItems,
-  //         reportItems,
-  //         vmvItems,
-  //         vmvIcons,
-  //         events,
-  //         broadcasts,
-  //         businessUnits
-
-  //       });
-
-  //     });
-
-  //   } catch (error) {
-
-  //     console.error(
-  //       "Something went wrong. Please contact administrator.",
-  //       error
-  //     );
-
-  //     this.setState({
-  //       isLoading: false
-  //     });
-
-  //   }
-  // }
 
 
 
@@ -409,9 +361,9 @@ export default class IConnectHome extends React.Component<
     });
   };
 
-  public componentDidUpdate(): void {
-    this.checkOverflow();
-  }
+  // public componentDidUpdate(): void {
+  //   this.checkOverflow();
+  // }
 
   public render(): React.ReactElement {
 

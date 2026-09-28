@@ -15,7 +15,7 @@ import "swiper/swiper-bundle.css";
 // import 'swiper/css/pagination';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
-import BpclIconnectHomeServices, { INotificationItem, IBGBannerItem, IQuickLinkItem, ICorporateNewsItem, IBusinessUnitItem, IVMVItem, IGovernanceItem, IReportItem, IBroadcastItem, IEmployeeGreetingItem, IAttachment, INewsPreviewItem, IEventPreviewItem } from "../Services/BpclIconnectHomeServices";
+import BpclIconnectHomeServices, { INotificationItem, IBGBannerItem, IQuickLinkItem, ICorporateNewsItem, IBusinessUnitItem, IVMVItem, IGovernanceItem, IReportItem, IBroadcastItem, IAttachment, INewsPreviewItem, IEventPreviewItem } from "../Services/BpclIconnectHomeServices";
 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -29,7 +29,7 @@ import PreviewNewsModal from "../Services/PreviewNewsModal";
 import Loader from "../Services/Loader";
 import { StaffPostingService } from "../Services/StaffPostingService";
 import StaffPostingModal from "../Services/StaffPostingModal";
-import BDcelebration from '../assets/images/celebration-BD.png';
+//import BDcelebration from '../assets/images/celebration-BD.png';
 
 
 interface IIConnectHomeState {
@@ -48,7 +48,7 @@ interface IIConnectHomeState {
   events: ICorporateNewsItem[];
   brands: ICorporateNewsItem[];
   broadcasts: IBroadcastItem[];
-  employeeGreetings: IEmployeeGreetingItem[];
+  // employeeGreetings: IEmployeeGreetingItem[];
   showPreview: boolean;
   previewItem?: IBroadcastItem;
   previewAttachments: IAttachment[];
@@ -73,13 +73,13 @@ interface IIConnectHomeState {
 
 /* -------------------- Helpers -------------------- */
 
-const chunkArray = <T,>(array: T[], size: number): T[][] => {
-  const chunks: T[][] = [];
-  for (let i = 0; i < array.length; i += size) {
-    chunks.push(array.slice(i, i + size));
-  }
-  return chunks;
-};
+// const chunkArray = <T,>(array: T[], size: number): T[][] => {
+//   const chunks: T[][] = [];
+//   for (let i = 0; i < array.length; i += size) {
+//     chunks.push(array.slice(i, i + size));
+//   }
+//   return chunks;
+// };
 
 /* -------------------- Component -------------------- */
 
@@ -115,7 +115,7 @@ export default class IConnectHome extends React.Component<
     selectedNewsItem: undefined,
     newsAttachments: [],
     notifications: [],
-    employeeGreetings: [],
+    // employeeGreetings: [],
     expandedCard: null,
     overflowMap: {}
 
@@ -137,7 +137,7 @@ export default class IConnectHome extends React.Component<
     );
 
     try {
-      const [notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons, employeeGreetings] = await Promise.all([
+      const [notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons] = await Promise.all([
         this.homeService.getNotifications(),
         this.homeService.getBGBanner(),
         this.homeService.getQuickLinks(),
@@ -150,11 +150,11 @@ export default class IConnectHome extends React.Component<
         this.homeService.getEvents(),
         this.homeService.getBroadcasts(),
         this.homeService.getVMVIcons(),
-        this.homeService.getEmployeeGreetings()
+        //this.homeService.getEmployeeGreetings()
 
       ]);
 
-      this.setState({ notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons, employeeGreetings, isLoading: false },
+      this.setState({ notifications, bgBanners, quickLinks, brands, businessUnits, vmvItems, governanceItems, reportItems, corporateNews, events, broadcasts, vmvIcons, isLoading: false },
         () => {
           // ✅ Call after DOM updates
           setTimeout(() => {
@@ -415,7 +415,7 @@ export default class IConnectHome extends React.Component<
 
   public render(): React.ReactElement {
 
-    const quickLinkSlides = chunkArray(this.state.quickLinks, 8);
+    // const quickLinkSlides = chunkArray(this.state.quickLinks, 8);
 
 
     const handleTitleRef = (text: string) => (el: HTMLElement | null) => {
@@ -452,395 +452,340 @@ export default class IConnectHome extends React.Component<
     return (
       <Container fluid className='p-0'>
         <Loader show={this.state.isLoading} />
-        <div className={styles.noticeBar}>
 
-          {/* Fixed Topic */}
-          <div className={styles.noticeBarLabel}>
+        {this.state.notifications.length > 0 && (
+          <div className={styles.noticeBar}>
 
-            <div className={styles.noticeIcon}>
-              <i className="bi bi-megaphone-fill" />
-            </div>
+            {/* Fixed Topic */}
+            <div className={styles.noticeBarLabel}>
 
-            <span className={styles.noticeLabelText}>
-              Notifications
-            </span>
-
-          </div>
-
-          {/* Moving Messages */}
-          <div className={styles.noticeContent}>
-
-            <div className={styles.noticeTrack}>
-
-              {/* First copy */}
-              <div className={styles.noticeGroup}>
-
-                {this.state.notifications.map(
-                  (notification: INotificationItem) => (
-                    <div
-                      className={styles.noticeItem}
-                      key={`first-${notification.Id}`}
-                    >
-
-                      <span className={styles.noticeMessage}>
-                        {notification.Title}
-                      </span>
-
-                      <span className={styles.noticeSeparator} />
-
-                    </div>
-                  )
-                )}
-
+              <div className={styles.noticeIcon}>
+                <i className="bi bi-megaphone-fill" />
               </div>
 
-              {/* Duplicate copy for seamless looping */}
-              <div
-                className={styles.noticeGroup}
-                aria-hidden="true"
-              >
-
-                {this.state.notifications.map(
-                  (notification: INotificationItem) => (
-                    <div
-                      className={styles.noticeItem}
-                      key={`second-${notification.Id}`}
-                    >
-
-                      <span className={styles.noticeMessage}>
-                        {notification.Title}
-                      </span>
-
-                      <span className={styles.noticeSeparator} />
-
-                    </div>
-                  )
-                )}
-
-              </div>
+              <span className={styles.noticeLabelText}>
+                Notifications
+              </span>
 
             </div>
 
-          </div>
+            {/* Moving Messages */}
+            <div className={styles.noticeContent}>
 
-        </div>
+              <div className={styles.noticeTrack}>
 
+                {/* First copy */}
+                <div className={styles.noticeGroup}>
 
-        <div className={styles.dashboardWrapper}>
-          <div
-            className={styles.topImageSection}
-            style={{
-              backgroundImage:
-                this.state.bgBanners.length > 0
-                  ? `url(${this.state.bgBanners[0].ImageUrl})`
-                  : undefined
-            }}
-          >
-            <div className={styles.topImageContent}>
-              <Row className="px-md-4">
+                  {this.state.notifications.map(
+                    (notification: INotificationItem) => (
+                      <div
+                        className={styles.noticeItem}
+                        key={`first-${notification.Id}`}
+                      >
+                        <span className={styles.noticeMessage}>
+                          {notification.Title}
+                        </span>
 
-                {/* Page Heading Section */}
-                <Col
-                  xs={{ span: 12, order: 0 }}
-                  lg={{ span: 5, order: 1 }}
-                >
-                  <div className={styles.bannerRightContent}>
-                    <h5 className={styles.pageHeading}>
-                      Hello, {this.props.context.pageContext.user.displayName}
-                    </h5>
-
-                    <h6 className={styles.pageSubHeading}>
-                      {this.state.bgBanners[0]?.BannerHeading ??
-                        "Let us accomplish something today."}
-                    </h6>
-                  </div>
-                </Col>
-
-
-                {/* Banner Section */}
-                <Col
-                  xs={{ span: 12, order: 1 }}
-                  lg={{ span: 7, order: 0 }}
-                >
-                  <div className={styles.bannerWrapper}>
-                    {this.state.brands.length === 0 ? (
-                      <div className={styles.noDataWrapper}>
-                        <p className={styles.noDataText}>
-                          No data available.
-                        </p>
+                        <span className={styles.noticeSeparator} />
                       </div>
-                    ) : (
-                      <Carousel controls={false} interval={4000} indicators onSlid={() => this.checkOverflow()}>
-                        {this.state.brands.map((item, i) => (
-                          <Carousel.Item key={item.Id}>
-                            <div
-                              className={styles.slide}
-                              onClick={() => {
-                                if (item.RedirectURL?.Url) {
-                                  window.open(item.RedirectURL.Url, "_blank");
-                                }
-                              }}
-                              style={{ cursor: "pointer" }}
-                            >
-                              <img
-                                src={item.ImageUrl}
-                                alt={item.Title}
-                              />
+                    )
+                  )}
 
-                              <div className={styles.content}>
-                                <h6>
-                                  {new Date(item.PublishedDate).toLocaleDateString("en-GB", {
-                                    month: "long",
-                                    year: "numeric",
-                                  })}
-                                </h6>
+                </div>
 
-                                <h4 className="carousel-title">
-                                  {item.Title}
-                                </h4>
-
-                              </div>
-                            </div>
-                          </Carousel.Item>
-                        ))}
-                      </Carousel>
-                    )}
-                  </div>
-                </Col>
-
-
-                {/* Quick Links Section */}
-                <Col
-                  xs={{ span: 12, order: 2 }}
-                  lg={{ span: 5, order: 2, offset: 7 }}
-                  className={styles.QLContainer}
+                {/* Duplicate copy for seamless looping */}
+                <div
+                  className={styles.noticeGroup}
+                  aria-hidden="true"
                 >
-                  <Card className={styles.qlCard}>
-                    <Card.Body>
-                      <h6 className={`${styles.pageSubHeading} px-md-3`}>
-                        Quick Links
-                      </h6>
 
-                      {quickLinkSlides && quickLinkSlides.length > 0 ? (
+                  {this.state.notifications.map(
+                    (notification: INotificationItem) => (
+                      <div
+                        className={styles.noticeItem}
+                        key={`second-${notification.Id}`}
+                      >
+                        <span className={styles.noticeMessage}>
+                          {notification.Title}
+                        </span>
 
-                        <Carousel
-                          indicators={true}
-                          controls={false}
-                          interval={null}
-                          className={styles.quickLinksCarousel}
-                        >
-                          {quickLinkSlides.map((slide, pageIndex) => (
-                            <Carousel.Item key={pageIndex}>
-                              <Row className="mx-2 my-1">
-                                {slide.map(item => (
-                                  <Col
-                                    md={3}
-                                    xs={3}
-                                    key={item.Id}
-                                    className={styles.qlContent}
-                                  >
-                                    <a
-                                      href={item.RedirectURL?.Url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      <img
-                                        src={item.ImageUrl}
-                                        alt={item.Title}
-                                        className={styles.quickLinksIcon}
-                                      />
+                        <span className={styles.noticeSeparator} />
+                      </div>
+                    )
+                  )}
 
-                                      <h6 className={styles.qlDescription}>
-                                        {item.Title}
-                                      </h6>
-                                    </a>
-                                  </Col>
-                                ))}
-                              </Row>
-                            </Carousel.Item>
-                          ))}
-                        </Carousel>
+                </div>
 
-                      ) : (
-                        <div className="text-center py-4">
-                          No data available
-                        </div>
-                      )}
+              </div>
 
-                    </Card.Body>
-                  </Card>
-                </Col>
+            </div>
 
-              </Row>
+          </div>
+        )}
+
+        {/* ===================== TOP QUICK LINKS ===================== */}
+        {/* Main Section Wrapper with Linear Gradient Background */}
+        <div className={styles.mainSectionWrapper}>
+
+          <div className={styles.QuickLinksWrapper}>
+            <div className={styles.topQuickLinksOuter}>
+
+              {/* Left Navigation Button - Outside Yellow Container */}
+              <button
+                type="button"
+                className={`topQuickLinksPrev ${styles.topQuickLinksNav} ${styles.navPrev}`}
+                aria-label="Previous quick links"
+              >
+                <i className="bi bi-chevron-left"></i>
+              </button>
+
+              {/* Quick Links Yellow Container */}
+              <div className={styles.topQuickLinksSection}>
+
+                {this.state.quickLinks.length > 0 ? (
+                  <div className={styles.topQuickLinksCarouselWrapper}>
+                    <Swiper
+                      modules={[Navigation, Autoplay]}
+                      spaceBetween={10}
+                      slidesPerView={12}
+                      loop={this.state.quickLinks.length > 12}
+                      autoplay={{
+                        delay: 3000,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true
+                      }}
+                      navigation={{
+                        prevEl: ".topQuickLinksPrev",
+                        nextEl: ".topQuickLinksNext"
+                      }}
+                      observer={true}
+                      observeParents={true}
+                      breakpoints={{
+                        0: { slidesPerView: 3, spaceBetween: 6 },
+                        480: { slidesPerView: 5, spaceBetween: 8 },
+                        768: { slidesPerView: 7, spaceBetween: 8 },
+                        992: { slidesPerView: 9, spaceBetween: 10 },
+                        1200: { slidesPerView: 10, spaceBetween: 10 },
+                        1600: { slidesPerView: 12, spaceBetween: 10 }
+                      }}
+                    >
+                      {this.state.quickLinks.map((item) => (
+                        <SwiperSlide key={item.Id}>
+                          <a
+                            href={item.RedirectURL?.Url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.topQuickLinkItem}
+                          >
+                            {/* Single White Container Box wrapping both Icon & Title */}
+                            <div className={styles.topQuickLinkCard}>
+                              <div className={styles.topQuickLinkIconBox}>
+                                <img
+                                  src={item.ImageUrl}
+                                  alt={item.Title}
+                                  className={styles.topQuickLinkIcon}
+                                />
+                              </div>
+
+                              <span
+                                className={styles.topQuickLinkText}
+                                title={item.Title}
+                              >
+                                {item.Title}
+                              </span>
+                            </div>
+                          </a>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  </div>
+                ) : (
+                  <div className={styles.topQuickLinksNoData}>
+                    No quick links available
+                  </div>
+                )}
+
+              </div>
+
+              {/* Right Navigation Button - Outside Yellow Container */}
+              <button
+                type="button"
+                className={`topQuickLinksNext ${styles.topQuickLinksNav} ${styles.navNext}`}
+                aria-label="Next quick links"
+              >
+                <i className="bi bi-chevron-right"></i>
+              </button>
+
             </div>
           </div>
-        </div>
 
 
-        {/* ---------------- News Carousel ---------------- */}
-        <Row>
-          <Col md={12} className="px-2">
-            <div className={styles.newsCarouselSection}>
-              <div className="d-flex justify-content-between align-items-center">
-                <h4 className={styles.sectionHeading}>Corporate News</h4>
-                <h6 className={styles.seeAll}>
-                  <span
-                    className={styles.seeAll}
-                    role="link"
-                    tabIndex={0}
-                    style={{ cursor: "pointer" }}
-                    onClick={() => {
-                      const folderUrl =
-                        `${this.props.context.pageContext.web.absoluteUrl}/SitePages/ViewAllNews.aspx`;
 
-                      window.open(folderUrl, "_blank");
+          {/* ---------------- News Carousel ---------------- */}
+          <Row>
+            <Col md={12} className="px-2">
+              <div className={styles.newsCarouselSection}>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h4 className={styles.sectionHeading}>Corporate News</h4>
+                  <h6 className={styles.seeAll}>
+                    <span
+                      className={styles.seeAll}
+                      role="link"
+                      tabIndex={0}
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        const folderUrl =
+                          `${this.props.context.pageContext.web.absoluteUrl}/SitePages/ViewAllNews.aspx`;
+
+                        window.open(folderUrl, "_blank");
+                      }}
+
+                    >
+                      See All
+                    </span>
+                  </h6>
+                </div>
+
+                <div className={styles.carouselWrapper}>
+
+                  {/* Left Arrow */}
+                  <div className={styles.newsPrevBtn}>
+                    <i className="bi bi-chevron-left" />
+                  </div>
+
+                  <Swiper
+
+                    modules={[Navigation, Autoplay]}
+
+                    spaceBetween={20}
+
+                    loop={this.state.corporateNews.length > 4}
+
+                    slidesPerGroup={1}
+
+                    navigation={true}
+
+
+
+                    observer={true}
+
+                    observeParents={true}
+
+                    onBeforeInit={(swiper) => {
+
+                      if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
+
+                        const navigation = swiper.params.navigation;
+
+                        navigation.prevEl = `.${styles.newsPrevBtn}`;
+
+                        navigation.nextEl = `.${styles.newsNextBtn}`;
+
+                      }
+
                     }}
 
+                    breakpoints={{
+
+                      0: { slidesPerView: 1 },
+
+                      768: { slidesPerView: 2 },
+
+                      992: { slidesPerView: 4 },
+
+                    }}
                   >
-                    See All
-                  </span>
-                </h6>
-              </div>
 
-              <div className={styles.carouselWrapper}>
+                    {this.state.corporateNews.map((item) => (
+                      <SwiperSlide key={item.Id}>
+                        <Card className={styles.newsCard}>
 
-                {/* Left Arrow */}
-                <div className={styles.newsPrevBtn}>
-                  <i className="bi bi-chevron-left" />
-                </div>
-
-                <Swiper
-
-                  modules={[Navigation, Autoplay]}
-
-                  spaceBetween={20}
-
-                  loop={this.state.corporateNews.length > 4}
-
-                  slidesPerGroup={1}
-
-                  navigation={true}
-
-
-
-                  observer={true}
-
-                  observeParents={true}
-
-                  onBeforeInit={(swiper) => {
-
-                    if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
-
-                      const navigation = swiper.params.navigation;
-
-                      navigation.prevEl = `.${styles.newsPrevBtn}`;
-
-                      navigation.nextEl = `.${styles.newsNextBtn}`;
-
-                    }
-
-                  }}
-
-                  breakpoints={{
-
-                    0: { slidesPerView: 1 },
-
-                    768: { slidesPerView: 2 },
-
-                    992: { slidesPerView: 4 },
-
-                  }}
-                >
-
-                  {this.state.corporateNews.map((item) => (
-                    <SwiperSlide key={item.Id}>
-                      <Card className={styles.newsCard}>
-
-                        {/* Image Wrapper */}
-                        <div
-
-                          className={styles.imageWrapper}
-
-                          role="button"
-
-                          tabIndex={0}
-
-                          onClick={() => {
-                            this.openNewsPreview(item).catch(() => {
-                              console.error("Something went wrong. Please contact administrator.");
-                            });
-                          }}
-
-
-                        >
-                          <Card.Img
-
-                            variant="top"
-
-                            src={item.ImageUrl}
-
-                            alt={item.Title}
-
-                          />
-
-                          {/* Like Overlay */}
+                          {/* Image Wrapper */}
                           <div
 
-                            className={`${styles.likeOverlay} ${item.liked ? styles.liked : ""}`}
+                            className={styles.imageWrapper}
 
-                            onClick={(e) => {
+                            role="button"
 
-                              e.stopPropagation();
+                            tabIndex={0}
 
-                              this.handleNewsLike(item).catch(() => {
-
-                                console.error(
-                                  "Something went wrong. Please contact administrator."
-                                );
-
+                            onClick={() => {
+                              this.openNewsPreview(item).catch(() => {
+                                console.error("Something went wrong. Please contact administrator.");
                               });
-
                             }}
+
+
                           >
-                            <i className="bi bi-hand-thumbs-up-fill" />
-                            <span>{item.LikesCount ?? 0}</span>
+                            <Card.Img
+
+                              variant="top"
+
+                              src={item.ImageUrl}
+
+                              alt={item.Title}
+
+                            />
+
+                            {/* Like Overlay */}
+                            <div
+
+                              className={`${styles.likeOverlay} ${item.liked ? styles.liked : ""}`}
+
+                              onClick={(e) => {
+
+                                e.stopPropagation();
+
+                                this.handleNewsLike(item).catch(() => {
+
+                                  console.error(
+                                    "Something went wrong. Please contact administrator."
+                                  );
+
+                                });
+
+                              }}
+                            >
+                              <i className="bi bi-hand-thumbs-up-fill" />
+                              <span>{item.LikesCount ?? 0}</span>
+                            </div>
                           </div>
-                        </div>
 
-                        <Card.Body className={styles.newsContent}>
-                          <span className={styles.dateText}>
+                          <Card.Body className={styles.newsContent}>
+                            <span className={styles.dateText}>
 
-                            {new Date(item.PublishedDate).toLocaleDateString()}
-                          </span>
+                              {new Date(item.PublishedDate).toLocaleDateString()}
+                            </span>
 
-                          <Card.Title
-                            className={styles.titleText}
-                            ref={handleTitleRef(item.Title)}
+                            <Card.Title
+                              className={styles.titleText}
+                              ref={handleTitleRef(item.Title)}
 
-                          >
-                            {item.Title}
-                          </Card.Title>
+                            >
+                              {item.Title}
+                            </Card.Title>
 
 
-                        </Card.Body>
+                          </Card.Body>
 
-                      </Card>
-                    </SwiperSlide>
+                        </Card>
+                      </SwiperSlide>
 
-                  ))}
-                </Swiper>
+                    ))}
+                  </Swiper>
 
-                {/* Right Arrow */}
-                <div className={styles.newsNextBtn}>
-                  <i className="bi bi-chevron-right" />
+                  {/* Right Arrow */}
+                  <div className={styles.newsNextBtn}>
+                    <i className="bi bi-chevron-right" />
+                  </div>
+
                 </div>
 
               </div>
-
-            </div>
-          </Col>
-        </Row>
-
+            </Col>
+          </Row>
+        </div>
 
         {/* ---------------- Broadcast Carousel ---------------- */}
         <Row>
@@ -908,11 +853,13 @@ export default class IConnectHome extends React.Component<
                                   e.key === "Enter" && this.openBroadcastPreview(item)
                                 }
                               >
-                                <img
-                                  src={item.IconUrl}
-                                  alt={item.BroadcastType.Label}
-                                  width={70}
-                                />
+                                <div className={styles.broadIconContainer}>
+                                  <img
+                                    src={item.IconUrl}
+                                    alt={item.BroadcastType.Label}
+                                    width={70}
+                                  />
+                                </div>
 
                                 <div className="me-2 p-2">
 
@@ -938,7 +885,7 @@ export default class IConnectHome extends React.Component<
 
         {/* ---------------- today's birthday section ---------------- */}
 
-        <Row>
+        {/* <Row>
           <Col md={12} className="px-2">
             <div className={styles.birthdayCarouselSection}>
               <Card className={styles.messageBorderCard}>
@@ -1015,7 +962,7 @@ export default class IConnectHome extends React.Component<
               </Card>
             </div>
           </Col>
-        </Row>
+        </Row> */}
 
 
         {/* ---------------- Events Section ---------------- */}

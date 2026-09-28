@@ -64,13 +64,13 @@ export interface IBroadcastItem {
     IconUrl: string;
 }
 
-export interface IEmployeeGreetingItem {
-    Id: number;
-    EmpName: { Id: number; Title: string; EMail: string; };
-    EmailID: string;
-    Category: string;
-    icon?: string;
-}
+// export interface IEmployeeGreetingItem {
+//     Id: number;
+//     EmpName: { Id: number; Title: string; EMail: string; };
+//     EmailID: string;
+//     Category: string;
+//     icon?: string;
+// }
 
 export interface IBusinessUnitItem {
     Id: number;
@@ -161,7 +161,8 @@ export default class BpclIconnectHomeServices {
                 "https://bharatpetroleum.sharepoint.com/sites/dev-corporate-publishing-hub";
         } else if (currentUrl.includes("qa-")) {
             this.PUBLISHING_HUB_URL =
-                "https://bharatpetroleum.sharepoint.com/sites/test-cph";
+                "https://bharatpetroleum.sharepoint.com/sites/qa-corporate-publishing-hub";
+                // "https://bharatpetroleum.sharepoint.com/sites/test-cph";
         } else {
             this.PUBLISHING_HUB_URL =
                 "https://bharatpetroleum.sharepoint.com/sites/iconnect-corporate-publishing-hub";
@@ -825,21 +826,21 @@ export default class BpclIconnectHomeServices {
                 Id: item.Id,
                 Title: item.Title,
                 PublishedDate: item.PublishedDate,
-                // BroadcastType: {
-                //     Label: item.BroadcastType?.Label || "",
-                //     TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
-                // },
                 BroadcastType: {
                     Label: item.BroadcastType?.Label || "",
-                    TermGuid: item.BroadcastType?.TermGuid || ""
+                    TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
                 },
-                // IconUrl: (item as any).BroadcastType?.[0].TermGuid
-                //     ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
-                //     : ""
-
-                IconUrl: item.BroadcastType?.TermGuid
-                    ? iconMap.get(item.BroadcastType.TermGuid) || ""
+                // BroadcastType: {
+                //     Label: item.BroadcastType?.Label || "",
+                //     TermGuid: item.BroadcastType?.TermGuid || ""
+                // },
+                IconUrl: (item as any).BroadcastType?.[0].TermGuid
+                    ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
                     : ""
+
+                // IconUrl: item.BroadcastType?.TermGuid
+                //     ? iconMap.get(item.BroadcastType.TermGuid) || ""
+                //     : ""
             }));
     }
 
@@ -902,23 +903,23 @@ export default class BpclIconnectHomeServices {
         return updatedLikes;
     }
 
-    public async getEmployeeGreetings(): Promise<IEmployeeGreetingItem[]> {
+    // public async getEmployeeGreetings(): Promise<IEmployeeGreetingItem[]> {
 
 
-        const items = await this.sp.web.lists.getByTitle("Corp_SL_EmployeeGreetings")
+    //     const items = await this.sp.web.lists.getByTitle("Corp_SL_EmployeeGreetings")
 
-            .items
-            .select("Id", "EmpName/Id", "EmpName/Title", "EmpName/EMail", "EmailID", "Category")
-            .expand("EmpName")
-            .orderBy("Id", false)();
-        return items.map((item: any) => ({
-            Id: item.Id,
-            EmpName: item.EmpName,
-            EmailID: item.EmailID,
-            Category: item.Category
+    //         .items
+    //         .select("Id", "EmpName/Id", "EmpName/Title", "EmpName/EMail", "EmailID", "Category")
+    //         .expand("EmpName")
+    //         .orderBy("Id", false)();
+    //     return items.map((item: any) => ({
+    //         Id: item.Id,
+    //         EmpName: item.EmpName,
+    //         EmailID: item.EmailID,
+    //         Category: item.Category
 
-        }));
-    }
+    //     }));
+    // }
 
 
 

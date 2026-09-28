@@ -376,7 +376,7 @@ export default class BpclIconnectHomeServices {
             .expand("AttachmentFiles", "LikedBy", "DLGroup")
             .filter("Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'Event' and Status eq 'Published'")
             .orderBy("PublishedDate", false)
-            .top(500)();
+            .top(200)();
 
         const currentUserId = await this.getCurrentUserId();
 

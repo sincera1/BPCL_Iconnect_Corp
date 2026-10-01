@@ -45,7 +45,7 @@ Container .row {
   width: 100%;
   /* Linear gradient background from #F2F6FC to #FFFFFF */
   background: linear-gradient(180deg, #FFFFFF 0%, #F2F6FC 100%);
-  padding: 10px 0;
+  // padding: 0px 0;
   box-sizing: border-box;
 }
 
@@ -57,7 +57,7 @@ Container .row {
   /* Set background to transparent so it blends with mainSectionWrapper */
   background: transparent;
   margin: 0;
-  padding: 6px 56px 10px;
+  padding: 4px 56px 6px;
   position: relative;
 }
 
@@ -81,7 +81,7 @@ Container .row {
 .topQuickLinksSection {
   position: relative;
   width: 100%;
-  padding: 10px 20px;
+  padding: 6px 20px;
 
   /* Matches the background image gradient */
   background: linear-gradient(90deg, #FF9800 0%, #FFD000 50%, #FFA000 100%);
@@ -109,7 +109,7 @@ Container .row {
 
 /* Add padding to the swiper-wrapper here */
 .topQuickLinksCarouselWrapper :global(.swiper-wrapper) {
-  padding: 10px 0px 10px 10px;
+  padding: 8px 0px 12px 8px;
 }
 
 .topQuickLinksCarouselWrapper :global(.swiper-slide) {
@@ -141,6 +141,22 @@ Container .row {
   transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
+:global(.topQuickLinksNavDisabled) {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Prevent hover styling from making a disabled arrow
+   look active */
+:global(.topQuickLinksNavDisabled):hover {
+  background: #ffffff;
+  color: #264e9b;
+  transform: translateY(-50%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
 .navPrev {
   left: -42px;
 }
@@ -166,6 +182,12 @@ Container .row {
 }
 
 /* =========================================================
+   DISABLED QUICK LINKS NAVIGATION
+   Swiper adds this class automatically
+   ========================================================= */
+
+
+/* =========================================================
    QUICK LINK ITEM CARD (LINK WRAPPER)
    ========================================================= */
 
@@ -178,14 +200,14 @@ Container .row {
 
 /* Single White Container Box wrapping Icon + Text */
 .topQuickLinkCard {
-  width: 80%;
-  min-height: 74px;
+  width: 90px;
+  min-height: 68px;
   /* Ensures consistent card height */
   background: rgba(255, 255, 255, 0.90);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.50);
   box-shadow: 0 4px 14px rgba(0, 30, 90, 0.12);
-  padding: 10px 6px;
+  padding: 8px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -205,8 +227,8 @@ Container .row {
    ========================================================= */
 
 .topQuickLinkIconBox {
-  width: 40px;
-  height: 36px;
+  width: 36px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -311,7 +333,7 @@ Container .row {
 
 .newsCarouselSection {
   background: transparent;
-  padding: 10px 56px 0px;
+  padding: 6px 56px 0px;
   border-radius: 0px;
   position: relative;
   margin: 0px;
@@ -326,15 +348,15 @@ Container .row {
 }
 
 .newsCarouselSection .sectionHeading {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   margin: 0px 10px 0px;
 }
 
 .broadcastsCarouselSection .sectionHeading {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  margin: 0px 10px 20px;
+  margin: 0px 10px 12px;
 }
 
 .newsCarouselSection .seeAll {
@@ -347,7 +369,7 @@ Container .row {
 
 .newsCarouselSection .seeAll,
 .broadcastsCarouselSection .seeAll {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   margin-top: 0px;
 
@@ -371,6 +393,54 @@ Container .row {
   text-decoration: underline;
 }
 
+/* =========================================================
+   NEWS HEADER ACTIONS
+   Pause / Play + See All
+   ========================================================= */
+
+.newsHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+
+/* =========================================================
+   NEWS AUTOPLAY BUTTON
+   ========================================================= */
+
+.newsAutoplayBtn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #003296;
+  margin-top: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.newsAutoplayBtn i {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.newsAutoplayBtn:hover {
+  transform: scale(1.12);
+  opacity: 0.75;
+}
+
+.newsAutoplayBtn:focus {
+  outline: none;
+}
 
 .cardRow {
   gap: 16px;
@@ -413,7 +483,7 @@ Container .row {
 
 .newsContent {
   background-color: #ffffff;
-  height: 60px;
+  height: 58px;
   /* Reduced content height */
   padding: 8px 12px;
   border-radius: 0px 0px 10px 10px;
@@ -543,7 +613,7 @@ Container .row {
 
 /* ✅ Add vertical padding to swiper-wrapper so hover shadows & cards are not clipped */
 .newsCarouselSection .carouselWrapper :global(.swiper-wrapper) {
-  padding: 12px 0px 16px 0px;
+  padding: 8px 0px 16px 0px;
   /* Top: 12px, Bottom: 16px */
 }
 
@@ -551,7 +621,7 @@ Container .row {
 
 .broadcastsCarouselSection {
   background: linear-gradient(90deg, #002B66 0%, #003680 50%, #001A40 100%);
-  padding: 20px 56px 30px;
+  padding: 14px 56px 20px;
   border-radius: 0px;
   position: relative;
 }
@@ -743,7 +813,7 @@ Container .row {
   gap: 12px;
   max-width: 340px;
   min-width: 340px;
-  padding: 12px 16px;
+  padding: 12px 16px 8px 16px;
 
   position: relative;
   overflow: hidden;
@@ -778,16 +848,19 @@ Container .row {
 
 .broadcastsCarouselSection .marqueeTrack .titleText {
   color: #fff;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.4;
   text-transform: capitalize;
 
-  /* Line Clamping for exactly 2 lines */
   display: -webkit-box;
-  line-clamp: 2;
   -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+
   overflow: hidden;
   text-overflow: ellipsis;
+
+  max-height: calc(14px * 1.4 * 2);
 }
 
 
@@ -1066,7 +1139,7 @@ Container .row {
 
 .messageCarouselSection .name,
 .reportsCarouselSection .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #037ec4;
   margin: 0;
@@ -1079,7 +1152,7 @@ Container .row {
 }
 
 .governanceCarouselSection .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #003296;
   margin: 0;
@@ -2135,7 +2208,7 @@ NAME
 ========================================= */
 
 .birthdayCarouselSection .name {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: #037ec4;
   margin: 0 0 10px;
@@ -2380,6 +2453,7 @@ SMALL MOBILE
   color: #ffffff;
   overflow: hidden;
   position: relative;
+  margin-bottom: 10px;
 }
 
 /* ============================================================

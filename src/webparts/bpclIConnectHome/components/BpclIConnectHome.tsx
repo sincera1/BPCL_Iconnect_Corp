@@ -9,8 +9,10 @@ import type { IBpclIConnectHomeProps } from './IBpclIConnectHomeProps';
 import type { CarouselRef } from 'react-bootstrap/Carousel';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation } from 'swiper/modules';
+import type { Swiper as SwiperInstance } from "swiper";
 //import 'swiper/css';
 import "swiper/swiper-bundle.css";
+
 // import 'swiper/css/navigation';
 // import 'swiper/css/pagination';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -62,6 +64,7 @@ interface IIConnectHomeState {
 
   expandedCard: string | null;
   overflowMap: { [key: string]: boolean };
+  isNewsAutoplayPaused: Boolean;
 
 
 }
@@ -75,7 +78,7 @@ export default class IConnectHome extends React.Component<
   IIConnectHomeState
 > {
   private carouselRef = React.createRef<CarouselRef>();
-
+  private newsSwiper?: SwiperInstance;
   state: IIConnectHomeState = {
     isLoading: true,
     isPaused: false,
@@ -102,8 +105,8 @@ export default class IConnectHome extends React.Component<
     notifications: [],
     // employeeGreetings: [],
     expandedCard: null,
-    overflowMap: {}
-
+    overflowMap: {},
+    isNewsAutoplayPaused: false
 
   };
 
@@ -121,7 +124,7 @@ export default class IConnectHome extends React.Component<
     );
 
     try {
-      
+
 
       const [
         notifications,
@@ -135,7 +138,7 @@ export default class IConnectHome extends React.Component<
         this.homeService.getBroadcasts()
       ]);
 
-      
+
 
       this.setState(
         {
@@ -152,7 +155,7 @@ export default class IConnectHome extends React.Component<
         }
       );
 
-    
+
 
       Promise.all([
         this.homeService.getBusinessUnits(),
@@ -501,25 +504,53 @@ export default class IConnectHome extends React.Component<
                       modules={[Navigation, Autoplay]}
                       spaceBetween={10}
                       slidesPerView={12}
-                      loop={this.state.quickLinks.length > 12}
+
+                      /* Important: don't use loop when you need disabled arrows */
+                      loop={false}
+
+                      /* Prevent Swiper from hiding navigation when there are fewer slides */
+                      watchOverflow={false}
+
                       autoplay={{
                         delay: 3000,
                         disableOnInteraction: false,
                         pauseOnMouseEnter: true
                       }}
+
                       navigation={{
                         prevEl: ".topQuickLinksPrev",
-                        nextEl: ".topQuickLinksNext"
+                        nextEl: ".topQuickLinksNext",
+                        disabledClass: "topQuickLinksNavDisabled"
                       }}
+
                       observer={true}
                       observeParents={true}
+
                       breakpoints={{
-                        0: { slidesPerView: 3, spaceBetween: 6 },
-                        480: { slidesPerView: 5, spaceBetween: 8 },
-                        768: { slidesPerView: 7, spaceBetween: 8 },
-                        992: { slidesPerView: 9, spaceBetween: 10 },
-                        1200: { slidesPerView: 10, spaceBetween: 10 },
-                        1600: { slidesPerView: 12, spaceBetween: 10 }
+                        0: {
+                          slidesPerView: 3,
+                          spaceBetween: 6
+                        },
+                        480: {
+                          slidesPerView: 5,
+                          spaceBetween: 8
+                        },
+                        768: {
+                          slidesPerView: 7,
+                          spaceBetween: 8
+                        },
+                        992: {
+                          slidesPerView: 9,
+                          spaceBetween: 10
+                        },
+                        1200: {
+                          slidesPerView: 10,
+                          spaceBetween: 10
+                        },
+                        1600: {
+                          slidesPerView: 12,
+                          spaceBetween: 10
+                        }
                       }}
                     >
                       {this.state.quickLinks.map((item) => (
@@ -530,7 +561,6 @@ export default class IConnectHome extends React.Component<
                             rel="noopener noreferrer"
                             className={styles.topQuickLinkItem}
                           >
-                            {/* Single White Container Box wrapping both Icon & Title */}
                             <div className={styles.topQuickLinkCard}>
                               <div className={styles.topQuickLinkIconBox}>
                                 <img
@@ -577,28 +607,98 @@ export default class IConnectHome extends React.Component<
           {/* ---------------- News Carousel ---------------- */}
           <Row>
             <Col md={12} className="px-2">
+
               <div className={styles.newsCarouselSection}>
+
+                {/* =========================
+          NEWS HEADER
+          ========================= */}
                 <div className="d-flex justify-content-between align-items-center">
-                  <h4 className={styles.sectionHeading}>Corporate News</h4>
-                  <h6 className={styles.seeAll}>
-                    <span
-                      className={styles.seeAll}
-                      role="link"
-                      tabIndex={0}
-                      style={{ cursor: "pointer" }}
+
+                  <h4 className={styles.sectionHeading}>
+                    Corporate News
+                  </h4>
+
+                  <div className={styles.newsHeaderActions}>
+
+
+                    {/* Play / Pause */}
+                    <button
+                      type="button"
+                      className={styles.newsAutoplayBtn}
+                      aria-label={
+                        this.state.isNewsAutoplayPaused
+                          ? "Play corporate news"
+                          : "Pause corporate news"
+                      }
+                      title={
+                        this.state.isNewsAutoplayPaused
+                          ? "Play"
+                          : "Pause"
+                      }
                       onClick={() => {
-                        const folderUrl =
-                          `${this.props.context.pageContext.web.absoluteUrl}/SitePages/ViewAllNews.aspx`;
 
-                        window.open(folderUrl, "_blank");
+                        if (!this.newsSwiper) {
+                          return;
+                        }
+
+                        if (this.state.isNewsAutoplayPaused) {
+
+                          this.newsSwiper.autoplay.start();
+
+                          this.setState({
+                            isNewsAutoplayPaused: false
+                          });
+
+                        } else {
+
+                          this.newsSwiper.autoplay.stop();
+
+                          this.setState({
+                            isNewsAutoplayPaused: true
+                          });
+
+                        }
+
                       }}
-
                     >
-                      See All
-                    </span>
-                  </h6>
+                      <i
+                        className={
+                          this.state.isNewsAutoplayPaused
+                            ? "bi bi-play-fill"
+                            : "bi bi-pause-fill"
+                        }
+                      />
+                    </button>
+
+                    {/* See All */}
+                    <h6 className={styles.seeAll}>
+                      <span
+                        className={styles.seeAll}
+                        role="link"
+                        tabIndex={0}
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+
+                          const folderUrl =
+                            `${this.props.context.pageContext.web.absoluteUrl}/SitePages/ViewAllNews.aspx`;
+
+                          window.open(folderUrl, "_blank");
+
+                        }}
+                      >
+                        See All
+                      </span>
+                    </h6>
+
+                  </div>
+
                 </div>
 
+
+                {/* =========================
+          NEWS CAROUSEL
+          ========================= */}
                 <div className={styles.carouselWrapper}>
 
                   {/* Left Arrow */}
@@ -606,32 +706,41 @@ export default class IConnectHome extends React.Component<
                     <i className="bi bi-chevron-left" />
                   </div>
 
-                  <Swiper
 
+                  <Swiper
                     modules={[Navigation, Autoplay]}
 
                     spaceBetween={20}
 
-                    loop={this.state.corporateNews.length > 4}
+                    loop={this.state.corporateNews.length > 1}
 
                     slidesPerGroup={1}
 
+                    autoplay={{
+                      delay: 4000,
+                      disableOnInteraction: false,
+                      pauseOnMouseEnter: false
+                    }}
+
                     navigation={true}
 
-
-
                     observer={true}
-
                     observeParents={true}
+
+                    onSwiper={(swiper) => {
+                      this.newsSwiper = swiper;
+                    }}
 
                     onBeforeInit={(swiper) => {
 
-                      if (swiper.params.navigation && typeof swiper.params.navigation !== "boolean") {
+                      if (
+                        swiper.params.navigation &&
+                        typeof swiper.params.navigation !== "boolean"
+                      ) {
 
                         const navigation = swiper.params.navigation;
 
                         navigation.prevEl = `.${styles.newsPrevBtn}`;
-
                         navigation.nextEl = `.${styles.newsNextBtn}`;
 
                       }
@@ -639,62 +748,56 @@ export default class IConnectHome extends React.Component<
                     }}
 
                     breakpoints={{
-
-                      0: { slidesPerView: 1 },
-
-                      768: { slidesPerView: 2 },
-
-                      992: { slidesPerView: 4 },
-
+                      0: {
+                        slidesPerView: 1
+                      },
+                      768: {
+                        slidesPerView: 2
+                      },
+                      992: {
+                        slidesPerView: 4
+                      }
                     }}
                   >
 
                     {this.state.corporateNews.map((item) => (
+
                       <SwiperSlide key={item.Id}>
+
                         <Card className={styles.newsCard}>
 
-                          {/* Image Wrapper */}
                           <div
-
                             className={styles.imageWrapper}
-
                             role="button"
-
                             tabIndex={0}
-
                             onClick={() => {
+
                               this.openNewsPreview(item).catch(() => {
-                                console.error("Something went wrong. Please contact administrator.");
+                                console.error(
+                                  "Something went wrong. Please contact administrator."
+                                );
                               });
+
                             }}
-
-
                           >
+
                             <Card.Img
-
                               variant="top"
-
                               src={item.ImageUrl}
-
                               alt={item.Title}
-
                             />
 
-                            {/* Like Overlay */}
                             <div
-
-                              className={`${styles.likeOverlay} ${item.liked ? styles.liked : ""}`}
-
+                              className={`${styles.likeOverlay} ${item.liked ? styles.liked : ""
+                                }`}
                               onClick={(e) => {
 
                                 e.stopPropagation();
 
                                 this.handleNewsLike(item).catch(() => {
-
                                   console.error(
                                     "Something went wrong. Please contact administrator."
                                   );
-
                                 });
 
                               }}
@@ -702,30 +805,35 @@ export default class IConnectHome extends React.Component<
                               <i className="bi bi-hand-thumbs-up-fill" />
                               <span>{item.LikesCount ?? 0}</span>
                             </div>
+
                           </div>
 
-                          <Card.Body className={styles.newsContent}>
-                            <span className={styles.dateText}>
 
-                              {new Date(item.PublishedDate).toLocaleDateString()}
+                          <Card.Body className={styles.newsContent}>
+
+                            <span className={styles.dateText}>
+                              {new Date(
+                                item.PublishedDate
+                              ).toLocaleDateString()}
                             </span>
 
                             <Card.Title
                               className={styles.titleText}
                               ref={handleTitleRef(item.Title)}
-
                             >
                               {item.Title}
                             </Card.Title>
 
-
                           </Card.Body>
 
                         </Card>
+
                       </SwiperSlide>
 
                     ))}
+
                   </Swiper>
+
 
                   {/* Right Arrow */}
                   <div className={styles.newsNextBtn}>
@@ -735,6 +843,7 @@ export default class IConnectHome extends React.Component<
                 </div>
 
               </div>
+
             </Col>
           </Row>
         </div>
@@ -748,7 +857,7 @@ export default class IConnectHome extends React.Component<
               <div className={styles.carouselWrapper}>
                 <div className={styles.topRightControls}>
                   {/* Pause / Play */}
-                  <button
+                  {/* <button
                     type="button"
                     className={styles.pauseBtn}
                     onClick={() =>
@@ -756,6 +865,22 @@ export default class IConnectHome extends React.Component<
                     }
                   >
                     {this.state.isPaused ? "▶" : "⏸"}
+                  </button> */}
+                  <button
+                    type="button"
+                    className={styles.pauseBtn}
+                    aria-label={this.state.isPaused ? "Play" : "Pause"}
+                    onClick={() =>
+                      this.setState({ isPaused: !this.state.isPaused })
+                    }
+                  >
+                    <i
+                      className={
+                        this.state.isPaused
+                          ? "bi bi-play-fill"
+                          : "bi bi-pause-fill"
+                      }
+                    ></i>
                   </button>
                   <span
                     className={styles.seeAll}

@@ -143,7 +143,6 @@ export default class BpclIconnectHomeServices {
     private sp: SPFI;
     public publishingHubSp: SPFI;
     private siteUrl: string;
-    private context: WebPartContext;
     private publishingHubUserId!: number;
 
 
@@ -171,7 +170,7 @@ export default class BpclIconnectHomeServices {
         this.sp = spfi().using(SPFx(context));
         this.publishingHubSp = spfi(this.PUBLISHING_HUB_URL).using(SPFx(context));
         this.siteUrl = context.pageContext.web.absoluteUrl;
-        this.context = context;
+        
     }
 
 
@@ -358,11 +357,13 @@ export default class BpclIconnectHomeServices {
 
     public async getEvents(): Promise<ICorporateNewsItem[]> {
 
-        const userGroups = await this.getUserGroups();
+        const staticDLGroup =
+            "DL ALL BPCL MGMT STAFF";
 
         const items = await this.publishingHubSp.web.lists
             .getByTitle("CorpCommunication")
-            .items.select(
+            .items
+            .select(
                 "Id",
                 "Title",
                 "PublishedDate",
@@ -373,8 +374,16 @@ export default class BpclIconnectHomeServices {
                 "DLGroup/Id",
                 "DLGroup/Title"
             )
-            .expand("AttachmentFiles", "LikedBy", "DLGroup")
-            .filter("Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'Event' and Status eq 'Published'")
+            .expand(
+                "AttachmentFiles",
+                "LikedBy",
+                "DLGroup"
+            )
+            .filter(
+                "Created ge datetime'2025-01-01T00:00:00Z' and " +
+                "CommunicationType eq 'Event' and " +
+                "Status eq 'Published'"
+            )
             .orderBy("PublishedDate", false)
             .top(100)();
 
@@ -384,7 +393,9 @@ export default class BpclIconnectHomeServices {
 
         for (const item of items) {
 
-            if (filteredItems.length === 15) break;
+            if (filteredItems.length === 15) {
+                break;
+            }
 
             // If no DLGroup → show to all
             if (!item.DLGroup || item.DLGroup.length === 0) {
@@ -398,14 +409,12 @@ export default class BpclIconnectHomeServices {
 
                 if (!dl) continue;
 
-                // ✅ 1. Check direct user assignment
-                if (dl.Id === currentUserId) {
-                    hasAccess = true;
-                    break;
-                }
-
-                // ✅ 2. Check group membership
-                if (dl.Title && userGroups.has(dl.Title)) {
+                // Check whether the configured DLGroup exists
+                if (
+                    dl.Title &&
+                    dl.Title.toLowerCase() ===
+                    staticDLGroup.toLowerCase()
+                ) {
                     hasAccess = true;
                     break;
                 }
@@ -430,7 +439,8 @@ export default class BpclIconnectHomeServices {
                 PublishedDate: item.PublishedDate,
                 LikesCount: item.LikesCount ?? 0,
                 ImageUrl:
-                    item.AttachmentFiles && item.AttachmentFiles.length > 0
+                    item.AttachmentFiles &&
+                        item.AttachmentFiles.length > 0
                         ? item.AttachmentFiles[0].ServerRelativeUrl
                         : "",
                 liked: isLiked,
@@ -661,42 +671,10 @@ export default class BpclIconnectHomeServices {
     }
 
 
-
-
-    private async getUserGroups(): Promise<Set<string>> {
-
-        const client = await this.context.msGraphClientFactory.getClient("3");
-
-        let requestUrl: string | null = "/me/transitiveMemberOf?$select=displayName";
-        const userGroups = new Set<string>();
-
-        while (requestUrl) {
-
-            const response = await client.api(requestUrl).get();
-
-            if (response.value) {
-                response.value.forEach((g: { displayName?: string }) => {
-                    if (g.displayName) {
-                        userGroups.add(g.displayName);
-                    }
-                });
-            }
-
-            requestUrl = response["@odata.nextLink"]
-                ? response["@odata.nextLink"].replace("https://graph.microsoft.com/v1.0", "")
-                : null;
-        }
-
-        return userGroups;
-    }
-
-
     public async getBroadcasts(): Promise<IBroadcastItem[]> {
 
-        const [userGroups, currentUserId] = await Promise.all([
-            this.getUserGroups(),
-            this.getCurrentUserId()
-        ]);
+        const staticDLGroup =
+            "DL ALL BPCL MGMT STAFF";
 
         const [items, iconMap] = await Promise.all([
 
@@ -714,7 +692,9 @@ export default class BpclIconnectHomeServices {
                 )
                 .expand("DLGroup")
                 .filter(
-                    "Created ge datetime'2025-01-01T00:00:00Z' and CommunicationType eq 'BroadCast' and Status eq 'Published'"
+                    "Created ge datetime'2025-01-01T00:00:00Z' and " +
+                    "CommunicationType eq 'BroadCast' and " +
+                    "Status eq 'Published'"
                 )
                 .orderBy("PublishedDate", false)
                 .top(100)(),
@@ -726,14 +706,22 @@ export default class BpclIconnectHomeServices {
             Id: number;
             Title: string;
             PublishedDate: string;
-            BroadcastType?: { Label?: string; TermGuid?: string };
-            DLGroup?: { Title?: string }[];
+            BroadcastType?: {
+                Label?: string;
+                TermGuid?: string;
+            };
+            DLGroup?: {
+                Title?: string;
+            }[];
         }[] = [];
 
         for (const item of items) {
 
-            if (filteredItems.length === 15) break;
+            if (filteredItems.length === 15) {
+                break;
+            }
 
+            // If no DLGroup → show to all
             if (!item.DLGroup || item.DLGroup.length === 0) {
                 filteredItems.push(item);
                 continue;
@@ -741,20 +729,22 @@ export default class BpclIconnectHomeServices {
 
             let hasAccess = false;
 
-            const dlGroups = Array.isArray(item.DLGroup) ? item.DLGroup : [item.DLGroup];
+            const dlGroups = Array.isArray(item.DLGroup)
+                ? item.DLGroup
+                : [item.DLGroup];
 
             for (const dl of dlGroups) {
 
-                if (!dl) continue;
-
-                // ✅ 1. Direct user check
-                if (dl.Id === currentUserId) {
-                    hasAccess = true;
-                    break;
+                if (!dl) {
+                    continue;
                 }
 
-                // ✅ 2. Group check
-                if (dl.Title && userGroups.has(dl.Title)) {
+                // Check only the static DL Group
+                if (
+                    dl.Title &&
+                    dl.Title.toLowerCase() ===
+                    staticDLGroup.toLowerCase()
+                ) {
                     hasAccess = true;
                     break;
                 }

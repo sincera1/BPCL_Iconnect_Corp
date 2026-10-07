@@ -106,7 +106,7 @@ export default class IConnectHome extends React.Component<
     // employeeGreetings: [],
     expandedCard: null,
     overflowMap: {},
-    isNewsAutoplayPaused: false
+    isNewsAutoplayPaused: true
 
   };
 
@@ -483,127 +483,239 @@ export default class IConnectHome extends React.Component<
         {/* Main Section Wrapper with Linear Gradient Background */}
         <div className={styles.mainSectionWrapper}>
 
-          <div className={styles.QuickLinksWrapper}>
-            <div className={styles.topQuickLinksOuter}>
+          {this.state.notifications.length > 0 ? (
+            // =========================
+            // Notifications Available
+            // OLD CODE
+            // =========================
+            <div className={styles.QuickLinksWrapper}>
+              <div className={styles.topQuickLinksOuter}>
 
-              {/* Left Navigation Button - Outside Yellow Container */}
-              <button
-                type="button"
-                className={`topQuickLinksPrev ${styles.topQuickLinksNav} ${styles.navPrev}`}
-                aria-label="Previous quick links"
-              >
-                <i className="bi bi-chevron-left"></i>
-              </button>
+                {/* Left Navigation Button */}
+                <button
+                  type="button"
+                  className={`topQuickLinksPrev ${styles.topQuickLinksNav} ${styles.navPrev}`}
+                  aria-label="Previous quick links"
+                >
+                  <i className="bi bi-chevron-left"></i>
+                </button>
 
-              {/* Quick Links Yellow Container */}
-              <div className={styles.topQuickLinksSection}>
+                {/* Quick Links Yellow Container */}
+                <div className={styles.topQuickLinksSection}>
+                  {this.state.quickLinks.length > 0 ? (
+                    <div className={styles.topQuickLinksCarouselWrapper}>
+                      <Swiper
+                        modules={[Navigation, Autoplay]}
+                        spaceBetween={10}
+                        slidesPerView={12}
+                        loop={false}
+                        watchOverflow={false}
 
-                {this.state.quickLinks.length > 0 ? (
-                  <div className={styles.topQuickLinksCarouselWrapper}>
-                    <Swiper
-                      modules={[Navigation, Autoplay]}
-                      spaceBetween={10}
-                      slidesPerView={12}
+                        autoplay={{
+                          delay: 3000,
+                          disableOnInteraction: false,
+                          pauseOnMouseEnter: true
+                        }}
 
-                      /* Important: don't use loop when you need disabled arrows */
-                      loop={false}
+                        navigation={{
+                          prevEl: ".topQuickLinksPrev",
+                          nextEl: ".topQuickLinksNext",
+                          disabledClass: "topQuickLinksNavDisabled"
+                        }}
 
-                      /* Prevent Swiper from hiding navigation when there are fewer slides */
-                      watchOverflow={false}
+                        observer={true}
+                        observeParents={true}
 
-                      autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                        pauseOnMouseEnter: true
-                      }}
+                        breakpoints={{
+                          0: {
+                            slidesPerView: 3,
+                            spaceBetween: 6
+                          },
+                          480: {
+                            slidesPerView: 5,
+                            spaceBetween: 8
+                          },
+                          768: {
+                            slidesPerView: 7,
+                            spaceBetween: 8
+                          },
+                          992: {
+                            slidesPerView: 9,
+                            spaceBetween: 10
+                          },
+                          1200: {
+                            slidesPerView: 10,
+                            spaceBetween: 10
+                          },
+                          1600: {
+                            slidesPerView: 12,
+                            spaceBetween: 10
+                          }
+                        }}
+                      >
+                        {this.state.quickLinks.map((item) => (
+                          <SwiperSlide key={item.Id}>
+                            <a
+                              href={item.RedirectURL?.Url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.topQuickLinkItem}
+                            >
+                              <div className={styles.topQuickLinkCard}>
+                                <div className={styles.topQuickLinkIconBox}>
+                                  <img
+                                    src={item.ImageUrl}
+                                    alt={item.Title}
+                                    className={styles.topQuickLinkIcon}
+                                  />
+                                </div>
 
-                      navigation={{
-                        prevEl: ".topQuickLinksPrev",
-                        nextEl: ".topQuickLinksNext",
-                        disabledClass: "topQuickLinksNavDisabled"
-                      }}
-
-                      observer={true}
-                      observeParents={true}
-
-                      breakpoints={{
-                        0: {
-                          slidesPerView: 3,
-                          spaceBetween: 6
-                        },
-                        480: {
-                          slidesPerView: 5,
-                          spaceBetween: 8
-                        },
-                        768: {
-                          slidesPerView: 7,
-                          spaceBetween: 8
-                        },
-                        992: {
-                          slidesPerView: 9,
-                          spaceBetween: 10
-                        },
-                        1200: {
-                          slidesPerView: 10,
-                          spaceBetween: 10
-                        },
-                        1600: {
-                          slidesPerView: 12,
-                          spaceBetween: 10
-                        }
-                      }}
-                    >
-                      {this.state.quickLinks.map((item) => (
-                        <SwiperSlide key={item.Id}>
-                          <a
-                            href={item.RedirectURL?.Url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.topQuickLinkItem}
-                          >
-                            <div className={styles.topQuickLinkCard}>
-                              <div className={styles.topQuickLinkIconBox}>
-                                <img
-                                  src={item.ImageUrl}
-                                  alt={item.Title}
-                                  className={styles.topQuickLinkIcon}
-                                />
+                                <span
+                                  className={styles.topQuickLinkText}
+                                  title={item.Title}
+                                >
+                                  {item.Title}
+                                </span>
                               </div>
+                            </a>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                  ) : (
+                    <div className={styles.topQuickLinksNoData}>
+                      No quick links available
+                    </div>
+                  )}
+                </div>
 
-                              <span
-                                className={styles.topQuickLinkText}
-                                title={item.Title}
-                              >
-                                {item.Title}
-                              </span>
-                            </div>
-                          </a>
-                        </SwiperSlide>
-                      ))}
-                    </Swiper>
-                  </div>
-                ) : (
-                  <div className={styles.topQuickLinksNoData}>
-                    No quick links available
-                  </div>
-                )}
+                {/* Right Navigation Button */}
+                <button
+                  type="button"
+                  className={`topQuickLinksNext ${styles.topQuickLinksNav} ${styles.navNext}`}
+                  aria-label="Next quick links"
+                >
+                  <i className="bi bi-chevron-right"></i>
+                </button>
 
               </div>
-
-              {/* Right Navigation Button - Outside Yellow Container */}
-              <button
-                type="button"
-                className={`topQuickLinksNext ${styles.topQuickLinksNav} ${styles.navNext}`}
-                aria-label="Next quick links"
-              >
-                <i className="bi bi-chevron-right"></i>
-              </button>
-
             </div>
-          </div>
+          ) : (
+            // =========================
+            // No Notifications
+            // NEW CODE
+            // =========================
+            <div className={`${styles.QuickLinksWrapper} ${styles.withoutNotification}`}>
+              <div className={styles.topQuickLinksOuter}>
+
+                {/* Left Arrow */}
+                <button
+                  type="button"
+                  className={`topQuickLinksPrev ${styles.topQuickLinksNav} ${styles.navPrev}`}
+                  aria-label="Previous quick links"
+                >
+                  <i className="bi bi-chevron-left"></i>
+                </button>
+
+                {/* Quick Links Container */}
+                <div className={styles.topQuickLinksSection}>
+                  {this.state.quickLinks.length > 0 ? (
+                    <div className={styles.topQuickLinksCarouselWrapper}>
+                      <Swiper
+                        modules={[Navigation, Autoplay]}
+                        spaceBetween={10}
+                        slidesPerView={12}
+                        loop={false}
+                        watchOverflow={false}
+
+                        navigation={{
+                          prevEl: ".topQuickLinksPrev",
+                          nextEl: ".topQuickLinksNext",
+                          disabledClass: "topQuickLinksNavDisabled"
+                        }}
+
+                        observer={true}
+                        observeParents={true}
+
+                        breakpoints={{
+                          0: {
+                            slidesPerView: 3,
+                            spaceBetween: 6
+                          },
+                          480: {
+                            slidesPerView: 5,
+                            spaceBetween: 8
+                          },
+                          768: {
+                            slidesPerView: 7,
+                            spaceBetween: 8
+                          },
+                          992: {
+                            slidesPerView: 9,
+                            spaceBetween: 10
+                          },
+                          1200: {
+                            slidesPerView: 10,
+                            spaceBetween: 10
+                          },
+                          1600: {
+                            slidesPerView: 12,
+                            spaceBetween: 10
+                          }
+                        }}
+                      >
+                        {this.state.quickLinks.map((item) => (
+                          <SwiperSlide key={item.Id}>
+                            <a
+                              href={item.RedirectURL?.Url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className={styles.topQuickLinkItem}
+                            >
+                              <div className={styles.topQuickLinkCard}>
+                                <div className={styles.topQuickLinkIconBox}>
+                                  <img
+                                    src={item.ImageUrl}
+                                    alt={item.Title}
+                                    className={styles.topQuickLinkIcon}
+                                  />
+                                </div>
+
+                                <span
+                                  className={styles.topQuickLinkText}
+                                  title={item.Title}
+                                >
+                                  {item.Title}
+                                </span>
+                              </div>
+                            </a>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    </div>
+                  ) : (
+                    <div className={styles.topQuickLinksNoData}>
+                      No quick links available
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Arrow */}
+                <button
+                  type="button"
+                  className={`topQuickLinksNext ${styles.topQuickLinksNav} ${styles.navNext}`}
+                  aria-label="Next quick links"
+                >
+                  <i className="bi bi-chevron-right"></i>
+                </button>
+
+              </div>
+            </div>
+          )}
 
 
 
+          {/* ---------------- News Carousel ---------------- */}
           {/* ---------------- News Carousel ---------------- */}
           <Row>
             <Col md={12} className="px-2">
@@ -637,36 +749,30 @@ export default class IConnectHome extends React.Component<
                           : "Pause"
                       }
                       onClick={() => {
-
                         if (!this.newsSwiper) {
                           return;
                         }
 
                         if (this.state.isNewsAutoplayPaused) {
-
+                          // Start autoplay when currently paused
                           this.newsSwiper.autoplay.start();
-
                           this.setState({
                             isNewsAutoplayPaused: false
                           });
-
                         } else {
-
+                          // Pause autoplay when currently running
                           this.newsSwiper.autoplay.stop();
-
                           this.setState({
                             isNewsAutoplayPaused: true
                           });
-
                         }
-
                       }}
                     >
                       <i
                         className={
                           this.state.isNewsAutoplayPaused
-                            ? "bi bi-play-fill"
-                            : "bi bi-pause-fill"
+                            ? "bi bi-play-fill"   /* Displays Play icon by default */
+                            : "bi bi-pause-fill"  /* Displays Pause icon when active */
                         }
                       />
                     </button>
@@ -709,54 +815,36 @@ export default class IConnectHome extends React.Component<
 
                   <Swiper
                     modules={[Navigation, Autoplay]}
-
                     spaceBetween={20}
-
                     loop={this.state.corporateNews.length > 1}
-
                     slidesPerGroup={1}
-
                     autoplay={{
                       delay: 4000,
                       disableOnInteraction: false,
                       pauseOnMouseEnter: false
                     }}
-
                     navigation={true}
-
                     observer={true}
                     observeParents={true}
-
                     onSwiper={(swiper) => {
                       this.newsSwiper = swiper;
+                      // Explicitly stop autoplay immediately on load
+                      swiper.autoplay.stop();
                     }}
-
                     onBeforeInit={(swiper) => {
-
                       if (
                         swiper.params.navigation &&
                         typeof swiper.params.navigation !== "boolean"
                       ) {
-
                         const navigation = swiper.params.navigation;
-
                         navigation.prevEl = `.${styles.newsPrevBtn}`;
                         navigation.nextEl = `.${styles.newsNextBtn}`;
-
                       }
-
                     }}
-
                     breakpoints={{
-                      0: {
-                        slidesPerView: 1
-                      },
-                      768: {
-                        slidesPerView: 2
-                      },
-                      992: {
-                        slidesPerView: 4
-                      }
+                      0: { slidesPerView: 1 },
+                      768: { slidesPerView: 2 },
+                      992: { slidesPerView: 4 }
                     }}
                   >
 
@@ -846,6 +934,8 @@ export default class IConnectHome extends React.Component<
 
             </Col>
           </Row>
+
+
         </div>
 
         {/* ---------------- Broadcast Carousel ---------------- */}

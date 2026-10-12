@@ -762,22 +762,22 @@ export default class BpclIconnectHomeServices {
                 Title: item.Title,
                 PublishedDate: item.PublishedDate,
                 
-                BroadcastType: {
-                    Label: item.BroadcastType?.Label || "",
-                    TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
-                },
-                IconUrl: (item as any).BroadcastType?.[0].TermGuid
-                    ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
-                    : ""
-
-                // QA site
                 // BroadcastType: {
                 //     Label: item.BroadcastType?.Label || "",
-                //     TermGuid: item.BroadcastType?.TermGuid || ""
+                //     TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""
                 // },
-                // IconUrl: item.BroadcastType?.TermGuid
-                //     ? iconMap.get(item.BroadcastType.TermGuid) || ""
+                // IconUrl: (item as any).BroadcastType?.[0].TermGuid
+                //     ? iconMap.get((item as any).BroadcastType?.[0].TermGuid) || ""
                 //     : ""
+
+                //QA site prod
+                BroadcastType: {
+                    Label: item.BroadcastType?.Label || "",
+                    TermGuid: item.BroadcastType?.TermGuid || ""
+                },
+                IconUrl: item.BroadcastType?.TermGuid
+                    ? iconMap.get(item.BroadcastType.TermGuid) || ""
+                    : ""
             }));
     }
 

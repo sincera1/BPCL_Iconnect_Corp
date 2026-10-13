@@ -164,7 +164,7 @@ export default class BpclIconnectHomeServices {
             // "https://bharatpetroleum.sharepoint.com/sites/test-cph";
         } else {
             this.PUBLISHING_HUB_URL =
-                "https://bharatpetroleum.sharepoint.com/sites/iconnect-corporate-publishing-hub";
+                "https://bharatpetroleum.sharepoint.com/sites/iconnect-cph";
         }
 
         this.sp = spfi().using(SPFx(context));

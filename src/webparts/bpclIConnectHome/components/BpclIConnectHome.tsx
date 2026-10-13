@@ -1443,9 +1443,14 @@ export default class IConnectHome extends React.Component<
                 }}
               >
                 {groupedVMV.map((item) => (
-                  <SwiperSlide key={item.Id}>
-                    <div className="w-100">
-                      <Card className={`${styles.cardCommon} ${styles.missionCard} h-100`}>
+                  // <SwiperSlide key={item.Id}>
+                  //   <div className="w-100">
+                  //     <Card className={`${styles.cardCommon} ${styles.missionCard} h-100`}>
+                  <SwiperSlide key={item.Id} className={styles.missionSlide}>
+                    <div className={styles.missionSlideInner}>
+                      <Card
+                        className={`${styles.cardCommon} ${styles.missionCard}`}
+                      >
                         <Card.Body>
 
                           {/* Icon */}
@@ -1469,41 +1474,35 @@ export default class IConnectHome extends React.Component<
                                 : ""
                                 }`}
                               ref={(el) => {
-                                if (
-                                  el &&
-                                  this.state.overflowMap[item.Title] === undefined
-                                ) {
-                                  setTimeout(() => {
-                                    requestAnimationFrame(() => {
+                                if (!el) return;
 
-                                      // const isOverflowing =
-                                      //   el.scrollHeight > el.clientHeight;
+                                setTimeout(() => {
+                                  const isOverflowing =
+                                    el.scrollHeight > 226;
 
-                                      // console.log(
-                                      //   item.Title,
-                                      //   "scrollHeight:", el.scrollHeight,
-                                      //   "clientHeight:", el.clientHeight,
-                                      //   "overflow:", isOverflowing
-                                      // );
-
-                                      this.setState((prev) => ({
-                                        overflowMap: {
-                                          ...prev.overflowMap,
-                                          [item.Title]: true
-                                        }
-                                      }));
-
-                                    });
-                                  }, 500);
-                                }
+                                  if (
+                                    this.state.overflowMap[item.Title] !== isOverflowing
+                                  ) {
+                                    this.setState((prev) => ({
+                                      overflowMap: {
+                                        ...prev.overflowMap,
+                                        [item.Title]: isOverflowing
+                                      }
+                                    }));
+                                  }
+                                }, 500);
                               }}
                             >
                               <ul className={styles.descList}>
                                 {item.Items.map((val, i) => (
-                                  <li key={i} className={styles.descItem}>
+                                  <li
+                                    key={i}
+                                    className={styles.descItem}
+                                  >
                                     <span className={styles.tickIcon}>
                                       <i className="bi bi-check-circle-fill" />
                                     </span>
+
                                     <span>{val.Title}</span>
                                   </li>
                                 ))}

@@ -1677,100 +1677,381 @@ Container .row {
   color: #000;
 }
 
-/* Content */
+// /* Content */
+// .missionContent {
+//   margin-top: 10px;
+// }
+
+// .titleText {
+//   font-size: 14px;
+//   font-weight: 600;
+//   color: #1e40af;
+//   margin-bottom: 6px;
+// }
+
+
+// .missionCard {
+//   position: relative;
+//   padding-bottom: 30px;
+//   overflow: visible !important;
+
+// }
+
+// /* Wrapper (controls height) */
+// .descWrapper {
+//   overflow: hidden;
+//   //max-height: 160px;
+//   max-height: 226px;
+//   transition: max-height 0.3s ease;
+//   position: relative;
+// }
+
+// /* Expanded */
+// .expanded {
+//   max-height: 1000px;
+// }
+
+// /* List */
+// .descList {
+//   padding-left: 0;
+//   margin: 8px 0;
+//   font-size: 12px;
+//   color: #374151;
+//   list-style: none;
+// }
+
+// /* Each item with tick */
+// .descItem {
+//   display: flex;
+//   align-items: flex-start;
+//   gap: 8px;
+//   margin-bottom: 4px;
+// }
+
+// /* Tick icon */
+// .tickIcon {
+//   color: #1e40af;
+//   font-size: 14px;
+//   margin-top: 2px;
+// }
+
+// /* 🔥 Floating button wrapper */
+// .expandBtnWrapper {
+//   position: absolute;
+//   bottom: -16px;
+//   left: 50%;
+//   transform: translateX(-50%);
+//   z-index: 20;
+//   /* increased */
+// }
+
+// /* 🔥 Rounded icon button */
+// .expandBtn {
+//   width: 36px;
+//   height: 36px;
+//   border-radius: 50%;
+//   border: none;
+//   background: #1e40af;
+//   color: #fff;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   cursor: pointer;
+//   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+//   transition: all 0.25s ease;
+// }
+
+// /* Hover */
+// .expandBtn:hover {
+//   background: #ffdc05;
+//   color: #000;
+//   transform: translateY(-3px);
+// }
+
+// /* Icon size */
+// .expandBtn i {
+//   font-size: 14px;
+// }
+
+
+/* ============================================================
+   SWIPER SLIDE
+============================================================ */
+ 
+.missionSlide {
+  height: auto !important;
+}
+ 
+.missionSlideInner {
+  width: 100%;
+}
+ 
+ 
+/* ============================================================
+   MISSION CARD
+============================================================ */
+ 
+.missionCard {
+  position: relative;
+  width: 100%;
+  min-height: 330px;
+ 
+  padding-bottom: 30px;
+ 
+  overflow: visible !important;
+ 
+  height: auto;
+ 
+  transition:
+    min-height 0.35s ease,
+    height 0.35s ease;
+}
+ 
+ 
+/* ============================================================
+   CARD BODY
+============================================================ */
+ 
+.missionCard :global(.card-body) {
+  padding: 18px;
+}
+ 
+ 
+/* ============================================================
+   CARD ICON
+============================================================ */
+ 
+.missionCard img {
+  display: block;
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+ 
+ 
+/* ============================================================
+   CONTENT
+============================================================ */
+ 
 .missionContent {
   margin-top: 10px;
 }
-
+ 
+ 
+/* ============================================================
+   TITLE
+============================================================ */
+ 
 .titleText {
   font-size: 14px;
   font-weight: 600;
   color: #1e40af;
+ 
+  margin-top: 0;
   margin-bottom: 6px;
+ 
+  line-height: 1.4;
 }
-
-
-.missionCard {
-  position: relative;
-  padding-bottom: 30px;
-  overflow: visible !important;
-
-}
-
-/* Wrapper (controls height) */
+ 
+ 
+/* ============================================================
+   DESCRIPTION WRAPPER
+============================================================ */
+ 
 .descWrapper {
   overflow: hidden;
-  //max-height: 160px;
   max-height: 226px;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.35s ease;
   position: relative;
 }
-
-/* Expanded */
-.expanded {
-  max-height: 1000px;
+ 
+.descWrapper.expanded {
+  max-height: 2000px;
 }
-
-/* List */
+ 
+/* ============================================================
+   DESCRIPTION LIST
+============================================================ */
+ 
 .descList {
   padding-left: 0;
   margin: 8px 0;
+ 
   font-size: 12px;
+  line-height: 1.5;
+ 
   color: #374151;
+ 
   list-style: none;
 }
-
-/* Each item with tick */
+ 
+ 
+/* ============================================================
+   DESCRIPTION ITEM
+============================================================ */
+ 
 .descItem {
   display: flex;
   align-items: flex-start;
+ 
   gap: 8px;
-  margin-bottom: 4px;
+ 
+  margin-bottom: 5px;
 }
-
-/* Tick icon */
+ 
+.descItem:last-child {
+  margin-bottom: 0;
+}
+ 
+ 
+/* ============================================================
+   CHECK / TICK ICON
+============================================================ */
+ 
 .tickIcon {
+  flex: 0 0 auto;
+ 
   color: #1e40af;
-  font-size: 14px;
+ 
+  font-size: 13px;
+ 
   margin-top: 2px;
 }
-
-/* 🔥 Floating button wrapper */
+ 
+.tickIcon i {
+  display: block;
+}
+ 
+ 
+/* ============================================================
+   EXPAND BUTTON WRAPPER
+============================================================ */
+ 
 .expandBtnWrapper {
   position: absolute;
-  bottom: -16px;
+ 
   left: 50%;
+  bottom: -16px;
+ 
   transform: translateX(-50%);
+ 
   z-index: 20;
-  /* increased */
 }
-
-/* 🔥 Rounded icon button */
+ 
+ 
+/* ============================================================
+   EXPAND BUTTON
+============================================================ */
+ 
 .expandBtn {
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+ 
   border: none;
+  border-radius: 50%;
+ 
   background: #1e40af;
-  color: #fff;
+  color: #ffffff;
+ 
   display: flex;
   align-items: center;
   justify-content: center;
+ 
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-  transition: all 0.25s ease;
+ 
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.20);
+ 
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
-
-/* Hover */
+ 
+ 
+/* ============================================================
+   EXPAND BUTTON HOVER
+============================================================ */
+ 
 .expandBtn:hover {
   background: #ffdc05;
-  color: #000;
+  color: #000000;
+ 
   transform: translateY(-3px);
+ 
+  box-shadow:
+    0 8px 18px rgba(0, 0, 0, 0.22);
 }
-
-/* Icon size */
+ 
+ 
+/* ============================================================
+   EXPAND ICON
+============================================================ */
+ 
 .expandBtn i {
   font-size: 14px;
+  line-height: 1;
+}
+ 
+ 
+/* ============================================================
+   CARD COMMON STYLING
+   Keep this if cardCommon is already used elsewhere.
+============================================================ */
+ 
+.cardCommon {
+  border: 1px solid #e1e8f2;
+  border-radius: 12px;
+ 
+  background: #ffffff;
+ 
+  box-shadow:
+    0 3px 12px rgba(0, 42, 100, 0.08);
+ 
+  transition:
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+ 
+.cardCommon:hover {
+  border-color: #c9d8ee;
+ 
+  box-shadow:
+    0 6px 18px rgba(0, 42, 100, 0.12);
+}
+ 
+ 
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+ 
+@media (max-width: 1199px) {
+ 
+  .missionCard {
+    min-height: 376px;
+  }
+ 
+  .descWrapper {
+    max-height: 216px;
+  }
+}
+ 
+ 
+@media (max-width: 991px) {
+ 
+  .missionCard {
+    min-height: 315px;
+  }
+ 
+  .descWrapper {
+    max-height: 210px;
+  }
+ 
+  .sectionHeading {
+    font-size: 16px;
+  }
 }
 
 .eventDate {
@@ -2533,18 +2814,21 @@ SMALL MOBILE
 ============================================================ */
 
 .noticeTrack {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-
+ 
   width: max-content;
   min-width: max-content;
-
+ 
+  flex-shrink: 0;
+ 
   white-space: nowrap;
-
+ 
   animation: noticeMarquee 32s linear infinite;
-
+ 
   will-change: transform;
-
+  transform: translate3d(0, 0, 0);
+ 
   &:hover {
     animation-play-state: paused;
   }
@@ -2662,15 +2946,13 @@ SMALL MOBILE
 ============================================================ */
 
 @keyframes noticeMarquee {
-
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
-
 }
 
 /* ============================================================
@@ -2766,10 +3048,17 @@ SMALL MOBILE
    ACCESSIBILITY
 ============================================================ */
 
+// @media (prefers-reduced-motion: reduce) {
+
+//   .noticeTrack {
+//     animation: none;
+//   }
+
+// }
+
+/* Do not disable the animation for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
-
   .noticeTrack {
-    animation: none;
+    animation: noticeMarquee 32s linear infinite !important;
   }
-
 }

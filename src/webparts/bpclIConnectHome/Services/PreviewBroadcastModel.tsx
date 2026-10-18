@@ -11,6 +11,10 @@ interface IBroadcastPreviewItem {
   Id: number;
   Title: string;
   PublishedDate?: string;
+  RelatedSiteURL?: {
+    Url: string;
+    Description: string;
+  };
 }
 
 interface Props {
@@ -42,6 +46,8 @@ const PreviewBroadcastModal: React.FC<Props> = ({
     isPdf(a.FileName)
   );
 
+  const relatedUrl = item.RelatedSiteURL?.Url?.trim();
+
   return (
     <Modal show={show} onHide={onClose} size="lg" centered>
       <Modal.Header closeButton>
@@ -53,17 +59,39 @@ const PreviewBroadcastModal: React.FC<Props> = ({
       <Modal.Body className={`p-3 ${styles.modalBody}`}>
 
         {/* Single Image */}
+
+        {/* Single Image */}
         {imageAttachments.length === 1 && (
-          <img
-            src={imageAttachments[0].ServerRelativeUrl}
-            alt="Broadcast"
-            style={{
-              width: "100%",
-              height: "auto",
-              objectFit: "cover",
-              marginBottom: "16px",
-            }}
-          />
+          <div className="mb-3">
+            {relatedUrl ? (
+              <a
+                href={relatedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ cursor: "pointer", display: "block" }}
+              >
+                <img
+                  src={imageAttachments[0].ServerRelativeUrl}
+                  alt="Broadcast"
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                    objectFit: "cover",
+                  }}
+                />
+              </a>
+            ) : (
+              <img
+                src={imageAttachments[0].ServerRelativeUrl}
+                alt="Broadcast"
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  objectFit: "cover",
+                }}
+              />
+            )}
+          </div>
         )}
 
         {/* Multiple Images */}
@@ -71,15 +99,64 @@ const PreviewBroadcastModal: React.FC<Props> = ({
           <Carousel controls={false} indicators={false} className="mb-3">
             {imageAttachments.map((img, index) => (
               <Carousel.Item key={index}>
-                <img
-                  src={img.ServerRelativeUrl}
-                  alt={img.FileName}
+                {relatedUrl ? (
+                  <a
+                    href={relatedUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ cursor: "pointer", display: "block" }}
+                  >
+                    <img
+                      src={img.ServerRelativeUrl}
+                      alt={img.FileName}
+                      style={{
+                        width: "100%",
+                        height: "360px",
+                        objectFit: "cover",
+                      }}
+                    />
+                  </a>
+                ) : (
+                  <img
+                    src={img.ServerRelativeUrl}
+                    alt={img.FileName}
+                    style={{
+                      width: "100%",
+                      height: "360px",
+                      objectFit: "cover",
+                    }}
+                  />
+                )}
+              </Carousel.Item>
+            ))}
+          </Carousel>
+        )}
+
+
+
+        {/* Multiple Images */}
+        {imageAttachments.length > 1 && (
+          <Carousel controls={false} indicators={false} className="mb-3">
+            {imageAttachments.map((img, index) => (
+              <Carousel.Item key={index}>
+                <a
+                  href={item.RelatedSiteURL?.Url || undefined}
+                  target={item.RelatedSiteURL?.Url ? "_blank" : undefined}
+                  rel="noopener noreferrer"
                   style={{
-                    width: "100%",
-                    height: "360px",
-                    objectFit: "cover",
+                    cursor: item.RelatedSiteURL?.Url ? "pointer" : "default",
                   }}
-                />
+                >
+                  <img
+                    src={img.ServerRelativeUrl}
+                    alt={img.FileName}
+                    style={{
+                      width: "100%",
+                      height: "360px",
+                      objectFit: "cover",
+                    }}
+                  />
+                </a>
               </Carousel.Item>
             ))}
           </Carousel>
@@ -88,9 +165,15 @@ const PreviewBroadcastModal: React.FC<Props> = ({
         {/* Date */}
         <p className="mb-3 text-muted">
           {item.PublishedDate
-            ? new Date(item.PublishedDate).toLocaleDateString()
+            ? new Date(item.PublishedDate).toLocaleDateString("en-GB", {
+              weekday: "long",
+              day: "2-digit",
+              month: "long",
+              year: "numeric",
+            })
             : ""}
         </p>
+
 
         {/* PDF Attachments */}
         {pdfAttachments.length > 0 && (

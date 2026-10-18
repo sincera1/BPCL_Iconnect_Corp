@@ -66,7 +66,7 @@ const PreviewEventsModal: React.FC<Props> = ({
       <Modal.Body className={`p-3 ${styles.modalBody}`}>
         {/* Images */}
         {images.length > 0 && (
-          <Carousel controls={false} indicators={false}  pause="hover">
+          <Carousel controls={false} indicators={false} pause="hover">
             {images.map((img, i) => (
               <Carousel.Item key={i}>
                 <img
@@ -74,7 +74,7 @@ const PreviewEventsModal: React.FC<Props> = ({
                   alt="Event"
                   className="d-block w-100"
                   style={{
-                    height:"auto",
+                    height: "auto",
                     objectFit: "contain",
                   }}
                 />
@@ -83,12 +83,14 @@ const PreviewEventsModal: React.FC<Props> = ({
           </Carousel>
         )}
 
+
         {/* Event Date */}
         {item.PublishedDate && (
           <p className="mt-3 mb-2 fw-semibold">
             {new Date(item.PublishedDate).toLocaleDateString("en-GB", {
+              weekday: "long",
               day: "2-digit",
-              month: "short",
+              month: "long",
               year: "numeric",
             })}
           </p>

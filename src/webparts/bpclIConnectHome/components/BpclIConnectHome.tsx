@@ -419,7 +419,7 @@ export default class IConnectHome extends React.Component<
               </div>
 
               <span className={styles.noticeLabelText}>
-                Notifications
+                 {this.state.notifications[0]?.NotificationLabel?.trim() || "Notifications"}
               </span>
 
             </div>
@@ -900,9 +900,12 @@ export default class IConnectHome extends React.Component<
                           <Card.Body className={styles.newsContent}>
 
                             <span className={styles.dateText}>
-                              {new Date(
-                                item.PublishedDate
-                              ).toLocaleDateString()}
+                              {new Date(item.PublishedDate).toLocaleDateString("en-GB", {
+                                weekday: "long",
+                                day: "2-digit",
+                                month: "long",
+                                year: "numeric",
+                              })}
                             </span>
 
                             <Card.Title
@@ -1228,8 +1231,9 @@ export default class IConnectHome extends React.Component<
                           <Card.Body >
                             <span className={styles.dateText}>
                               {new Date(event.PublishedDate).toLocaleDateString("en-GB", {
+                                weekday: "long",
                                 day: "2-digit",
-                                month: "short",
+                                month: "long",
                                 year: "numeric",
                               })}
                             </span>

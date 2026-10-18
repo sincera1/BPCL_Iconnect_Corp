@@ -82,7 +82,7 @@ const PreviewNewsModal: React.FC<Props> = ({
       centered
       style={{ zIndex: 9999 }}
     >
-      <Modal.Header  className={styles.modalHeader} closeButton >
+      <Modal.Header className={styles.modalHeader} closeButton >
         <Modal.Title className={styles.pageTitle}>
           {item.Title}
         </Modal.Title>
@@ -90,8 +90,8 @@ const PreviewNewsModal: React.FC<Props> = ({
 
       <Modal.Body className={`px-3 py-0 ${styles.modalBody}`}>
         {images.length > 0 && (
-          <Carousel 
-          className={styles.modalCarousel}
+          <Carousel
+            className={styles.modalCarousel}
             interval={3000}
             controls
             indicators={false}
@@ -148,11 +148,12 @@ const PreviewNewsModal: React.FC<Props> = ({
         <div className="p-1 mt-3">
           <p className="mb-2">
             {item.PublishedDate
-              ? new Date(item.PublishedDate).toLocaleDateString("en-IN", {
-                  day: "2-digit",
-                  month: "short",
-                  year: "numeric",
-                })
+              ? new Date(item.PublishedDate).toLocaleDateString("en-GB", {
+                weekday: "long",
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+              })
               : ""}
           </p>
 

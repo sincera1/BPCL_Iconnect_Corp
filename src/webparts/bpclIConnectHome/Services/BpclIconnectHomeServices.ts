@@ -11,6 +11,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 export interface INotificationItem {
     Id: number;
     Title: string;
+    NotificationLabel: string;
     IsActive: boolean;
     DisplayOrder: number;
 }
@@ -62,6 +63,10 @@ export interface IBroadcastItem {
         TermGuid: string;
     };
     IconUrl: string;
+    RelatedSiteURL?: {
+        Url: string;
+        Description: string;
+    };
 }
 
 // export interface IEmployeeGreetingItem {
@@ -170,7 +175,7 @@ export default class BpclIconnectHomeServices {
         this.sp = spfi().using(SPFx(context));
         this.publishingHubSp = spfi(this.PUBLISHING_HUB_URL).using(SPFx(context));
         this.siteUrl = context.pageContext.web.absoluteUrl;
-        
+
     }
 
 
@@ -182,7 +187,8 @@ export default class BpclIconnectHomeServices {
                 "Id",
                 "Title",
                 "IsActive",
-                "DisplayOrder"
+                "DisplayOrder",
+                "NotificationLabel"
             )
             .filter("IsActive eq 1")
             .orderBy("DisplayOrder", true)();
@@ -191,7 +197,8 @@ export default class BpclIconnectHomeServices {
             Id: item.Id,
             Title: item.Title,
             IsActive: item.IsActive,
-            DisplayOrder: item.DisplayOrder
+            DisplayOrder: item.DisplayOrder,
+            NotificationLabel: item.NotificationLabel
         }));
     }
 
@@ -685,6 +692,7 @@ export default class BpclIconnectHomeServices {
                     "Id",
                     "Title",
                     "PublishedDate",
+                    "RelatedSiteURL",
                     "BroadcastType/Label",
                     "BroadcastType/TermGuid",
                     "DLGroup/Id",
@@ -706,6 +714,10 @@ export default class BpclIconnectHomeServices {
             Id: number;
             Title: string;
             PublishedDate: string;
+            RelatedSiteURL?: {
+                Url: string;
+                Description: string;
+            };
             BroadcastType?: {
                 Label?: string;
                 TermGuid?: string;
@@ -761,7 +773,7 @@ export default class BpclIconnectHomeServices {
                 Id: item.Id,
                 Title: item.Title,
                 PublishedDate: item.PublishedDate,
-                
+                RelatedSiteURL: item.RelatedSiteURL,
                 // BroadcastType: {
                 //     Label: item.BroadcastType?.Label || "",
                 //     TermGuid: (item as any).BroadcastType?.[0].TermGuid || ""

@@ -14,6 +14,10 @@ interface IEventPreviewItem {
   MainDescription?: string;
   Thumbnail?: string;
   ThumbnailCaption?: string;
+  RelatedSiteURL?: {
+    Url: string;
+    Description: string;
+  };
 }
 
 interface Props {
@@ -31,32 +35,75 @@ const PreviewEventsModal: React.FC<Props> = ({
   item,
   attachments = [],
 }) => {
-  if (!show || !item) return null;
+  if (!show || !item) {
+    return null;
+  }
 
   const getFileUrl = (fileName: string): string => {
-    for (let i = 0; i < attachments.length; i++) {
-      if (attachments[i].FileName === fileName) {
-        return SITE_URL + attachments[i].ServerRelativeUrl;
-      }
-    }
-    return "";
+    const attachment = attachments.find(
+      (att) => att.FileName === fileName
+    );
+
+    return attachment
+      ? `${SITE_URL}${attachment.ServerRelativeUrl}`
+      : "";
   };
 
   const images: string[] = [];
 
   if (item.Thumbnail) {
-    const url = getFileUrl(item.Thumbnail);
-    if (url) images.push(url);
+    const thumbnailUrl = getFileUrl(item.Thumbnail);
+
+    if (thumbnailUrl) {
+      images.push(thumbnailUrl);
+    }
   }
 
+  // If the thumbnail is missing or not found, use all attachments.
   if (images.length === 0 && attachments.length > 0) {
-    attachments.forEach(att => {
-      images.push(SITE_URL + att.ServerRelativeUrl);
+    attachments.forEach((attachment) => {
+      images.push(
+        `${SITE_URL}${attachment.ServerRelativeUrl}`
+      );
     });
   }
 
+  const relatedUrl = item.RelatedSiteURL?.Url?.trim();
+
+  const handleImageClick = (): void => {
+    
+
+    if (!relatedUrl) {
+      return;
+    }
+
+    try {
+      const parsedUrl = new URL(relatedUrl);
+
+       if (
+        parsedUrl.protocol !== "https:" &&
+        parsedUrl.protocol !== "http:"
+      ) {
+        return;
+      }
+
+      window.open(
+        parsedUrl.href,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    } catch  {
+      return;
+    }
+  };
+
   return (
-    <Modal show={show} onHide={onClose} size="lg" centered>
+    <Modal
+      show={show}
+      onHide={onClose}
+      size="lg"
+      centered
+    >
       <Modal.Header closeButton>
         <Modal.Title className={styles.pageTitle}>
           {item.Title}
@@ -64,18 +111,24 @@ const PreviewEventsModal: React.FC<Props> = ({
       </Modal.Header>
 
       <Modal.Body className={`p-3 ${styles.modalBody}`}>
-        {/* Images */}
+        {/* Event Images */}
         {images.length > 0 && (
-          <Carousel controls={false} indicators={false} pause="hover">
-            {images.map((img, i) => (
-              <Carousel.Item key={i}>
+          <Carousel
+            controls={false}
+            indicators={false}
+            pause="hover"
+          >
+            {images.map((imageUrl, index) => (
+              <Carousel.Item key={index}>
                 <img
-                  src={img}
-                  alt="Event"
+                  src={imageUrl}
+                  alt={item.Title || "Event"}
                   className="d-block w-100"
+                  onClick={handleImageClick}
                   style={{
                     height: "auto",
                     objectFit: "contain",
+                    cursor: relatedUrl ? "pointer" : "default",
                   }}
                 />
               </Carousel.Item>
@@ -83,11 +136,12 @@ const PreviewEventsModal: React.FC<Props> = ({
           </Carousel>
         )}
 
-
         {/* Event Date */}
         {item.PublishedDate && (
           <p className="mt-3 mb-2 fw-semibold">
-            {new Date(item.PublishedDate).toLocaleDateString("en-GB", {
+            {new Date(
+              item.PublishedDate
+            ).toLocaleDateString("en-GB", {
               weekday: "long",
               day: "2-digit",
               month: "long",
@@ -96,7 +150,7 @@ const PreviewEventsModal: React.FC<Props> = ({
           </p>
         )}
 
-        {/* ✅ Event Description (THIS WAS MISSING) */}
+        {/* Event Description */}
         {item.MainDescription && (
           <div
             className={styles.previewDesc}
@@ -106,12 +160,6 @@ const PreviewEventsModal: React.FC<Props> = ({
           />
         )}
       </Modal.Body>
-
-      {/* <Modal.Footer>
-        <Button variant="outline-primary" onClick={onClose}>
-          Close
-        </Button>
-      </Modal.Footer> */}
     </Modal>
   );
 };

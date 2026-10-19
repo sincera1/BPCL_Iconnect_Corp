@@ -231,7 +231,7 @@ export default class IConnectHome extends React.Component<
   private openEventPreview = async (item: ICorporateNewsItem): Promise<void> => {
     try {
       const attachments = await this.homeService.getAttachments(item.Id);
-      console.log("Event attachments:", attachments);
+      
 
       this.setState({
         showEventPreview: true,

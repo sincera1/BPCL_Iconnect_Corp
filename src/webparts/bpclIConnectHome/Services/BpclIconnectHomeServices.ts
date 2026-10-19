@@ -51,6 +51,10 @@ export interface ICorporateNewsItem {
         Url: string;
         Description: string;
     };
+     RelatedSiteURL?: {
+        Url: string;
+        Description: string;
+    };
 
 }
 
@@ -135,6 +139,10 @@ export interface IEventPreviewItem {
     PublishedDate: string;
     Thumbnail?: string;
     ThumbnailCaption?: string;
+    RelatedSiteURL?: {
+        Url: string;
+        Description: string;
+    };
 
 }
 
@@ -379,7 +387,8 @@ export default class BpclIconnectHomeServices {
                 "LikedBy/Id",
                 "ThumbnailCaption",
                 "DLGroup/Id",
-                "DLGroup/Title"
+                "DLGroup/Title",
+                "RelatedSiteURL"
             )
             .expand(
                 "AttachmentFiles",
@@ -451,7 +460,8 @@ export default class BpclIconnectHomeServices {
                         ? item.AttachmentFiles[0].ServerRelativeUrl
                         : "",
                 liked: isLiked,
-                ThumbnailCaption: item.ThumbnailCaption
+                ThumbnailCaption: item.ThumbnailCaption,
+                RelatedSiteURL: item.RelatedSiteURL
             };
         });
     }
@@ -928,7 +938,8 @@ export default class BpclIconnectHomeServices {
                     "PublishedDate",
                     "MainDescription",
                     "Thumbnail",
-                    "ThumbnailCaption"
+                    "ThumbnailCaption",
+                    "RelatedSiteURL"
                 )();
 
             return item;

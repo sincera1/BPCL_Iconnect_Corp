@@ -231,7 +231,7 @@ export default class IConnectHome extends React.Component<
   private openEventPreview = async (item: ICorporateNewsItem): Promise<void> => {
     try {
       const attachments = await this.homeService.getAttachments(item.Id);
-      
+
 
       this.setState({
         showEventPreview: true,
@@ -255,9 +255,10 @@ export default class IConnectHome extends React.Component<
     item: ICorporateNewsItem
   ): Promise<void> => {
     try {
+      
 
       // If Staff Posting → no need to fetch preview + attachments
-      if (item.NewsTypes?.WssId === 24) {
+      if (item.NewsTypes?.TermGuid === "51ab6bdd-d1a1-46ea-8b1f-2cf59a46ea67") {
         this.setState({
           showNewsPreview: true,
           selectedNewsItem: item,
@@ -419,7 +420,7 @@ export default class IConnectHome extends React.Component<
               </div>
 
               <span className={styles.noticeLabelText}>
-                 {this.state.notifications[0]?.NotificationLabel?.trim() || "Notifications"}
+                {this.state.notifications[0]?.NotificationLabel?.trim() || "Notifications"}
               </span>
 
             </div>
@@ -1610,7 +1611,7 @@ export default class IConnectHome extends React.Component<
 
         {this.state.selectedNewsItem &&
           //(this.state.selectedNewsItem.NewsTypes?.Label?.toLowerCase() === "staff posting") ? (
-          this.state.selectedNewsItem.NewsTypes?.WssId === 24 ? (
+          this.state.selectedNewsItem.NewsTypes?.TermGuid === "51ab6bdd-d1a1-46ea-8b1f-2cf59a46ea67" ? (
           <StaffPostingModal
             show={this.state.showNewsPreview}
             onClose={this.closeNewsPreview}

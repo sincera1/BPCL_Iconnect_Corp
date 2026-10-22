@@ -51,7 +51,7 @@ export interface ICorporateNewsItem {
         Url: string;
         Description: string;
     };
-     RelatedSiteURL?: {
+    RelatedSiteURL?: {
         Url: string;
         Description: string;
     };
@@ -255,22 +255,22 @@ export default class BpclIconnectHomeServices {
         return this.publishingHubUserId;
     }
 
-    private async getTaxonomyLabelByWssId(wssId: number): Promise<string> {
-        if (!wssId) return "";
+    // private async getTaxonomyLabelByWssId(wssId: number): Promise<string> {
+    //     if (!wssId) return "";
 
-        try {
-            const items = await this.publishingHubSp.web.lists
-                .getByTitle("TaxonomyHiddenList")
-                .items
-                .filter(`ID eq ${wssId}`)
-                .select("Id", "Term")();
+    //     try {
+    //         const items = await this.publishingHubSp.web.lists
+    //             .getByTitle("TaxonomyHiddenList")
+    //             .items
+    //             .filter(`ID eq ${wssId}`)
+    //             .select("Id", "Term")();
 
-            return items.length > 0 ? items[0].Title : "";
-        } catch (error) {
-            console.error("Something went wrong. Please contact administrator.");
-            return "";
-        }
-    }
+    //         return items.length > 0 ? items[0].Title : "";
+    //     } catch (error) {
+    //         console.error("Something went wrong. Please contact administrator.");
+    //         return "";
+    //     }
+    // }
 
 
 
@@ -315,9 +315,7 @@ export default class BpclIconnectHomeServices {
                     item.Thumbnail
                 );
 
-                const resolvedLabel = await this.getTaxonomyLabelByWssId(
-                    item.NewsTypes?.WssId
-                );
+                
 
                 const likedUsers = item.LikedBy
                     ? item.LikedBy.map((u: { Id: number }) => u.Id)
@@ -332,7 +330,12 @@ export default class BpclIconnectHomeServices {
                     LikesCount: item.LikesCount || 0,
                     ImageUrl: imageRelativeUrl,
                     liked: isLiked,
-                    newsType: resolvedLabel
+                    // newsType: resolvedLabel
+                    NewsTypes: {
+                        WssId: item.NewsTypes?.WssId,
+                        TermGuid: item.NewsTypes?.TermGuid,
+                        Label: item.NewsTypes?.Label
+                    }
                 };
             })
         );

@@ -115,95 +115,240 @@ export default class IConnectHome extends React.Component<
 
 
 
-  public async componentDidMount(): Promise<void> {
-    this.homeService = new BpclIconnectHomeServices(this.props.context);
+  // public async componentDidMount(): Promise<void> {
+  //   this.homeService = new BpclIconnectHomeServices(this.props.context);
+
+  //   this.staffPostingService = new StaffPostingService(
+  //     this.homeService.publishingHubSp,
+  //     this.props.context
+  //   );
+
+  //   try {
+
+
+  //     const [
+  //       notifications,
+  //       quickLinks,
+  //       corporateNews,
+  //       broadcasts
+  //     ] = await Promise.all([
+  //       this.homeService.getNotifications(),
+  //       this.homeService.getQuickLinks(),
+  //       this.homeService.getCorporateNews(),
+  //       this.homeService.getBroadcasts()
+  //     ]);
+
+
+
+  //     this.setState(
+  //       {
+  //         notifications,
+  //         quickLinks,
+  //         corporateNews,
+  //         broadcasts,
+  //         isLoading: false
+  //       },
+  //       () => {
+  //         setTimeout(() => {
+  //           this.checkOverflow();
+  //         }, 0);
+  //       }
+  //     );
+
+
+
+  //     Promise.all([
+  //       this.homeService.getBusinessUnits(),
+  //       this.homeService.getVisionMissionValues(),
+  //       this.homeService.getVMVIcons(),
+  //       this.homeService.getGovernanceItems(),
+  //       this.homeService.getReportItems(),
+  //       this.homeService.getEvents()
+  //     ])
+  //       .then(
+  //         ([
+  //           businessUnits,
+  //           vmvItems,
+  //           vmvIcons,
+  //           governanceItems,
+  //           reportItems,
+  //           events
+  //         ]) => {
+  //           this.setState({
+  //             businessUnits,
+  //             vmvItems,
+  //             vmvIcons,
+  //             governanceItems,
+  //             reportItems,
+  //             events
+  //           });
+  //         }
+  //       )
+  //       .catch((error) => {
+  //         console.error(
+  //           "Error loading remaining home page data:",
+  //           error
+  //         );
+  //       });
+
+  //   } catch (error) {
+  //     console.error(
+  //       "Something went wrong while loading initial data.",
+  //       error
+  //     );
+
+  //     this.setState({
+  //       isLoading: false
+  //     });
+  //   }
+  // }
+
+
+
+  public componentDidMount(): void {
+    this.homeService = new BpclIconnectHomeServices(
+      this.props.context
+    );
 
     this.staffPostingService = new StaffPostingService(
       this.homeService.publishingHubSp,
       this.props.context
     );
 
+    void this.loadPageData();
+  }
+
+  private async loadSafely<T>(
+    sectionName: string,
+    request: Promise<T>,
+    fallback: T
+  ): Promise<T> {
     try {
-
-
-      const [
-        notifications,
-        quickLinks,
-        corporateNews,
-        broadcasts
-      ] = await Promise.all([
-        this.homeService.getNotifications(),
-        this.homeService.getQuickLinks(),
-        this.homeService.getCorporateNews(),
-        this.homeService.getBroadcasts()
-      ]);
-
-
-
-      this.setState(
-        {
-          notifications,
-          quickLinks,
-          corporateNews,
-          broadcasts,
-          isLoading: false
-        },
-        () => {
-          setTimeout(() => {
-            this.checkOverflow();
-          }, 0);
-        }
-      );
-
-
-
-      Promise.all([
-        this.homeService.getBusinessUnits(),
-        this.homeService.getVisionMissionValues(),
-        this.homeService.getVMVIcons(),
-        this.homeService.getGovernanceItems(),
-        this.homeService.getReportItems(),
-        this.homeService.getEvents()
-      ])
-        .then(
-          ([
-            businessUnits,
-            vmvItems,
-            vmvIcons,
-            governanceItems,
-            reportItems,
-            events
-          ]) => {
-            this.setState({
-              businessUnits,
-              vmvItems,
-              vmvIcons,
-              governanceItems,
-              reportItems,
-              events
-            });
-          }
-        )
-        .catch((error) => {
-          console.error(
-            "Error loading remaining home page data:",
-            error
-          );
-        });
-
+      return await request;
     } catch (error) {
-      console.error(
-        "Something went wrong while loading initial data.",
-        error
-      );
-
-      this.setState({
-        isLoading: false
-      });
+      console.error(`Please Contact Administrator.`);
+      return fallback;
     }
   }
 
+  private async loadPageData(): Promise<void> {
+  
+    const [
+      notifications,
+      corporateNews,
+      broadcasts
+    ] = await Promise.all([
 
+      this.loadSafely(
+        "Notifications",
+        this.homeService.getNotifications(),
+        [] as INotificationItem[]
+      ),
+
+      this.loadSafely(
+        "Corporate News",
+        this.homeService.getCorporateNews(),
+        [] as ICorporateNewsItem[]
+      ),
+
+      this.loadSafely(
+        "Broadcasts",
+        this.homeService.getBroadcasts(),
+        [] as IBroadcastItem[]
+      )
+
+    ]);
+
+    this.setState(
+      {
+        notifications,
+        corporateNews,
+        broadcasts,
+        isLoading: false
+      },
+      () => {
+        setTimeout(() => {
+          this.checkOverflow();
+        }, 0);
+      }
+    );
+
+    void this.loadRemainingSections();
+  }
+
+  private async loadRemainingSections(): Promise<void> {
+
+
+    const tasks: Promise<void>[] = [
+
+      // 1. Quick Links
+      this.loadSafely(
+        "Quick Links",
+        this.homeService.getQuickLinks(),
+        [] as IQuickLinkItem[]
+      ).then(quickLinks => {
+        this.setState({ quickLinks });
+      }),
+
+      // 2. Business Units
+      this.loadSafely(
+        "Business Units",
+        this.homeService.getBusinessUnits(),
+        [] as IBusinessUnitItem[]
+      ).then(businessUnits => {
+        this.setState({ businessUnits });
+      }),
+
+      // 3. Vision, Mission and Values
+      this.loadSafely(
+        "VMV Items",
+        this.homeService.getVisionMissionValues(),
+        [] as IVMVItem[]
+      ).then(vmvItems => {
+        this.setState({ vmvItems });
+      }),
+
+      // 4. VMV Icons
+      this.loadSafely(
+        "VMV Icons",
+        this.homeService.getVMVIcons(),
+        new Map<string, string>()
+      ).then(vmvIcons => {
+        this.setState({ vmvIcons });
+      }),
+
+      // 5. Governance
+      this.loadSafely(
+        "Governance",
+        this.homeService.getGovernanceItems(),
+        [] as IGovernanceItem[]
+      ).then(governanceItems => {
+        this.setState({ governanceItems });
+      }),
+
+      // 6. Reports
+      this.loadSafely(
+        "Reports",
+        this.homeService.getReportItems(),
+        [] as IReportItem[]
+      ).then(reportItems => {
+        this.setState({ reportItems });
+      }),
+
+      // 7. Events
+      this.loadSafely(
+        "Events",
+        this.homeService.getEvents(),
+        [] as ICorporateNewsItem[]
+      ).then(events => {
+        this.setState({ events });
+      })
+
+    ];
+
+    await Promise.all(tasks);
+
+  }
 
   private openBroadcastPreview = async (item: IBroadcastItem): Promise<void> => {
     try {
@@ -255,7 +400,7 @@ export default class IConnectHome extends React.Component<
     item: ICorporateNewsItem
   ): Promise<void> => {
     try {
-      
+
 
       // If Staff Posting → no need to fetch preview + attachments
       if (item.NewsTypes?.TermGuid === "51ab6bdd-d1a1-46ea-8b1f-2cf59a46ea67") {
